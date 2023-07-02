@@ -1,4 +1,4 @@
-package nu.staldal.http4kthymeleaf
+package nu.staldal.htmxhttp4kthymeleaf
 
 import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.TEXT_HTML
