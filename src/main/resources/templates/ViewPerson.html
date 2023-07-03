@@ -1,0 +1,8 @@
+<div data-hx-target="this" data-hx-swap="outerHTML">
+    <div><label>First Name</label>: <span data-th-text="${model.firstName}">[first name]</span></div>
+    <div><label>Last Name</label>: <span data-th-text="${model.lastName}">[last name]</span></div>
+    <div><label>Email</label>: <span data-th-text="${model.email}">[email]</span></div>
+    <button data-hx-get="/person/edit" class="btn btn-primary">
+        Click To Edit
+    </button>
+</div>
