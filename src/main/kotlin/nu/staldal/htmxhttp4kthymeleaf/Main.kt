@@ -2,8 +2,9 @@ package nu.staldal.htmxhttp4kthymeleaf
 
 import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.TEXT_HTML
-import org.http4k.core.Method
+import org.http4k.core.Method.*
 import org.http4k.core.Response
+import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.lens.FormField
@@ -29,6 +30,7 @@ val personLens = Body.webForm(Validator.Strict, firstNameField, lastNameField, e
     .map { PersonData(firstNameField(it), lastNameField(it), emailField(it)) }
     .toLens()
 val pageLens = Query.int().required("page")
+val makeLens = Query.string().required("make")
 
 interface HtmlViewModel : ViewModel {
     override fun template() = javaClass.simpleName + ".html"
@@ -55,6 +57,11 @@ data class AgentsList(val agents: List<Agent>, val page: Int) : HtmlViewModel
 data class InfiniteScroll(val agents: List<Agent>, val page: Int) : HtmlViewModel
 data class AgentsListInfinite(val agents: List<Agent>, val page: Int) : HtmlViewModel
 
+data class IdName(val id: String, val name: String)
+
+data class ValueSelect(val makes: List<IdName>) : HtmlViewModel
+data class Models(val models: List<IdName>) : HtmlViewModel
+
 @Suppress("ClassName")
 object index : HtmlViewModel
 
@@ -70,39 +77,56 @@ fun main() {
         Agent(it.number + 1, "Agent Smith", "void${it.number + 1}@null.com", UUID.randomUUID().toString())
     }
 
+    val makes = listOf(IdName("audi", "Audi"), IdName("toyota", "Toyota"), IdName("bmw", "BMW"))
+    val models = mapOf(
+        "audi" to listOf(IdName("a1", "A1"), IdName("a3", "A3"), IdName("a6", "A6")),
+        "toyota" to listOf(IdName("landcruiser", "Landcruiser"), IdName("tacoma", "Tacoma"), IdName("yaris", "Yaris")),
+        "bmw" to listOf(IdName("325i", "325i"), IdName("325ix", "325ix"), IdName("X5", "X5"))
+    )
+
     val app = routes(
-        "/" bind Method.GET to {
+        "/" bind GET to {
             Response(OK).with(htmlLens of index)
         },
-        "/click-to-edit" bind Method.GET to {
+        "/click-to-edit" bind GET to {
             Response(OK).with(htmlLens of ClickToEdit(person))
         },
-        "/click-to-load" bind Method.GET to {
+        "/click-to-load" bind GET to {
             Response(OK).with(htmlLens of ClickToLoad(agents.take(10).toList(), 1))
         },
-        "/infinite-scroll" bind Method.GET to {
+        "/infinite-scroll" bind GET to {
             Response(OK).with(htmlLens of InfiniteScroll(agents.take(10).toList(), 1))
         },
+        "/value-select" bind GET to {
+            Response(OK).with(htmlLens of ValueSelect(makes))
+        },
 
-        "/person" bind Method.GET to {
+        "/person" bind GET to {
             Response(OK).with(htmlLens of ViewPerson(person))
         },
-        "/person/edit" bind Method.GET to {
+        "/person/edit" bind GET to {
             Response(OK).with(htmlLens of EditPerson(person))
         },
-        "/person" bind Method.PUT to { request ->
+        "/person" bind PUT to { request ->
             person = personLens(request)
             println("Person updated: $person")
             Response(OK).with(htmlLens of ViewPerson(person))
         },
-        "/agents" bind Method.GET to { request ->
+        "/agents" bind GET to { request ->
             val page = pageLens(request)
-            Response(OK).with(htmlLens of AgentsList(agents.drop(10 * page).take(10).toList(), page+1))
+            Response(OK).with(htmlLens of AgentsList(agents.drop(10 * page).take(10).toList(), page + 1))
         },
-        "/infinite-agents" bind Method.GET to { request ->
+        "/infinite-agents" bind GET to { request ->
             val page = pageLens(request)
-            Response(OK).with(htmlLens of AgentsListInfinite(agents.drop(10 * page).take(10).toList(), page+1))
+            Response(OK).with(htmlLens of AgentsListInfinite(agents.drop(10 * page).take(10).toList(), page + 1))
         },
+        "/models" bind GET to { request ->
+            val make = makeLens(request)
+            models[make]?.let {
+                Response(OK).with(htmlLens of Models(it))
+            } ?: Response(NOT_FOUND)
+        },
+
         webJars()
     )
 

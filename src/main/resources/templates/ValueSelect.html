@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head data-th-replace="~{layout.html :: head}">
+    <title>title</title>
+</head>
+<body>
+<h1 data-th-replace="~{layout.html :: header}">Header</h1>
+<h2>Value select</h2>
+<div>
+    <label>Make</label>
+    <select name="make" data-hx-get="/models" data-hx-target="#models" data-hx-indicator=".htmx-indicator">
+      <option value="" selected></option>
+      <option data-th-each="make : ${model.makes}" data-th-value="${make.id}" data-th-text="${make.name}">Make</option>
+    </select>
+  </div>
+  <div>
+    <label>Model</label>
+    <select id="models" name="model">
+    </select>
+</div>
+</body>
+</html>
