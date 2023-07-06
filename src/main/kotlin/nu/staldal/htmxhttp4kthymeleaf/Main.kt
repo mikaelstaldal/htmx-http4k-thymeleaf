@@ -28,6 +28,7 @@ val emailField = FormField.string().required("email")
 val personLens = Body.webForm(Validator.Strict, firstNameField, lastNameField, emailField)
     .map { PersonData(firstNameField(it), lastNameField(it), emailField(it)) }
     .toLens()
+val pageLens = Query.int().required("page")
 
 interface HtmlViewModel : ViewModel {
     override fun template() = javaClass.simpleName + ".html"
@@ -51,6 +52,9 @@ data class Agent(val number: Int, val name: String, val email: String, val id: S
 data class ClickToLoad(val agents: List<Agent>, val page: Int) : HtmlViewModel
 data class AgentsList(val agents: List<Agent>, val page: Int) : HtmlViewModel
 
+data class InfiniteScroll(val agents: List<Agent>, val page: Int) : HtmlViewModel
+data class AgentsListInfinite(val agents: List<Agent>, val page: Int) : HtmlViewModel
+
 @Suppress("ClassName")
 object index : HtmlViewModel
 
@@ -59,7 +63,6 @@ private const val port = 8000
 fun main() {
     val renderer = ThymeleafTemplates().CachingClasspath("templates")
     val htmlLens = Body.viewModel(renderer, TEXT_HTML).toLens()
-    val pageLens = Query.int().required("page")
 
     var person = PersonData("Bob", "Smith", "bsmith@example.com")
 
@@ -74,6 +77,13 @@ fun main() {
         "/click-to-edit" bind Method.GET to {
             Response(OK).with(htmlLens of ClickToEdit(person))
         },
+        "/click-to-load" bind Method.GET to {
+            Response(OK).with(htmlLens of ClickToLoad(agents.take(10).toList(), 1))
+        },
+        "/infinite-scroll" bind Method.GET to {
+            Response(OK).with(htmlLens of InfiniteScroll(agents.take(10).toList(), 1))
+        },
+
         "/person" bind Method.GET to {
             Response(OK).with(htmlLens of ViewPerson(person))
         },
@@ -85,12 +95,13 @@ fun main() {
             println("Person updated: $person")
             Response(OK).with(htmlLens of ViewPerson(person))
         },
-        "/click-to-load" bind Method.GET to {
-            Response(OK).with(htmlLens of ClickToLoad(agents.take(10).toList(), 1))
-        },
         "/agents" bind Method.GET to { request ->
             val page = pageLens(request)
             Response(OK).with(htmlLens of AgentsList(agents.drop(10 * page).take(10).toList(), page+1))
+        },
+        "/infinite-agents" bind Method.GET to { request ->
+            val page = pageLens(request)
+            Response(OK).with(htmlLens of AgentsListInfinite(agents.drop(10 * page).take(10).toList(), page+1))
         },
         webJars()
     )

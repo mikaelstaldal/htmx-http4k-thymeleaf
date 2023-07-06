@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head data-th-replace="~{layout.html :: head}">
+    <title>title</title>
+</head>
+<body>
+<h1>Infinite scroll</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>ID</th>
+    </tr>
+    </thead>
+    <tbody data-th-insert="~{AgentsListInfinite.html}"></tbody>
+</table>
+</body>
+</html>
