@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head data-th-replace="~{layout.html :: head}">
-    <title>title</title>
-</head>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::content})}">
 <body>
-<h1 data-th-replace="~{layout.html :: header}">Header</h1>
-<h2>Click to edit</h2>
-<div data-th-replace="~{ViewPerson.html}"></div>
+<h1 data-th-fragment="title">Click to edit</h1>
+<div data-th-fragment="content" data-th-replace="~{ViewPerson.html}"></div>
 </body>
 </html>
