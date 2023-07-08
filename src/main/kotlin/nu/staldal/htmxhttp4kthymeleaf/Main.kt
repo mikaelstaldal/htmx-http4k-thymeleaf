@@ -4,9 +4,12 @@ import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.TEXT_HTML
 import org.http4k.core.Method.*
 import org.http4k.core.Response
+import org.http4k.core.Status
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.then
 import org.http4k.core.with
+import org.http4k.filter.ServerFilters
 import org.http4k.lens.FormField
 import org.http4k.lens.Query
 import org.http4k.lens.Validator
@@ -130,6 +133,9 @@ fun main() {
         webJars()
     )
 
-    app.asServer(SunHttp(port)).start()
+    ServerFilters.CatchAll { t ->
+        t.printStackTrace()
+        Response(Status.INTERNAL_SERVER_ERROR)
+    }.then(app).asServer(SunHttp(port)).start()
     println("Listening on $port")
 }
