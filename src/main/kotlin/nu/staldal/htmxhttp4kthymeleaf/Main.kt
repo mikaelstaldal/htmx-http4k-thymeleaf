@@ -17,8 +17,8 @@ import org.http4k.lens.int
 import org.http4k.lens.string
 import org.http4k.lens.webForm
 import org.http4k.routing.bind
+import org.http4k.routing.htmxWebjars
 import org.http4k.routing.routes
-import org.http4k.routing.webJars
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import org.http4k.template.ThymeleafTemplates
@@ -130,7 +130,7 @@ fun main() {
             } ?: Response(NOT_FOUND)
         },
 
-        webJars()
+        htmxWebjars()
     )
 
     ServerFilters.CatchAll { t ->
