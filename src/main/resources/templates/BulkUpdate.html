@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::style}, ~{::content})}">
+<style data-th-fragment="style">
+    .htmx-settling tr.deactivate td {
+        background: lightcoral;
+    }
+
+    .htmx-settling tr.activate td {
+        background: darkseagreen;
+    }
+
+    tr td {
+        transition: all 1.2s;
+    }
+</style>
+<body>
+<h2 data-th-fragment="title">Bulk update</h2>
+<div data-th-fragment="content">
+    <div data-hx-include="#checked-contacts" data-hx-target="#tbody">
+        <button class="btn btn-primary me-1" data-hx-put="/contacts/activate">Activate</button>
+        <button class="btn btn-primary" data-hx-put="/contacts/deactivate">Deactivate</button>
+    </div>
+    <form id="checked-contacts">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" _="
+                                    on change
+                                    get the &lt;input[type=checkbox]/&gt; in the &lt;tbody/&gt; in the closest &lt;table/&gt;
+                                    set its checked to my checked
+                                "></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <tr data-th-each="contact : ${model.contacts}">
+                <td><input type="checkbox" name="ids" value="id" data-th-value="${contact.id}"></td>
+                <td data-th-text="${contact.name}">Joe Smith</td>
+                <td data-th-text="${contact.email}">joe@smith.org</td>
+                <td data-th-text="${contact.active}? 'Active' : 'Inactive'">Active</td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+</body>
+</html>

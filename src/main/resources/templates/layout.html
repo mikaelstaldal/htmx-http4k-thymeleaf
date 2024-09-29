@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" data-th-fragment="layout (title, content)">
+<html lang="en" data-th-fragment="layout (title, style, content)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="/htmx.min.js"></script>
+    <script type="text/javascript" src="/_hyperscript.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <style data-th-replace="${style}">
+    </style>
     <title>htmx with http4k and Thymeleaf templates</title>
 </head>
 <body>
-<h1>htmx with http4k and Thymeleaf templates</h1>
-<h2 data-th-insert="${title}">Title</h2>
-<div data-th-replace="${content}">Layout content</div>
+<div class="container">
+    <h1>htmx with http4k and Thymeleaf templates</h1>
+    <h2 data-th-insert="${title}">Title</h2>
+    <div data-th-replace="${content}">Layout content</div>
+</div>
 </body>
 </html>

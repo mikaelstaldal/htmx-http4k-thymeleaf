@@ -1,0 +1,7 @@
+<tr data-th-each="contact : ${model.contacts}"
+    class="${contact.second}? (${model.activate}? 'activate' : 'deactivate') : ''">
+    <td><input type="checkbox" name="ids" value="id" data-th-value="${contact.first.id}"></td>
+    <td data-th-text="${contact.first.name}">Joe Smith</td>
+    <td data-th-text="${contact.first.email}">joe@smith.org</td>
+    <td data-th-text="${contact.first.active}? 'Active' : 'Inactive'">Active</td>
+</tr>

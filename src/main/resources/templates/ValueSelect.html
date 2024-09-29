@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::content})}">
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
 <body>
 <h1 data-th-fragment="title">Value select</h1>
 <div data-th-fragment="content">
-    <div>
-        <label>Make</label>
-        <select name="make" data-hx-get="/models" data-hx-target="#models" data-hx-indicator=".htmx-indicator">
-            <option value="" selected></option>
-            <option data-th-each="make : ${model.makes}" data-th-value="${make.id}" data-th-text="${make.name}">Make
-            </option>
-        </select>
+    <div class="row mb-3">
+        <label class="col-sm-1 col-form-label">Make</label>
+        <div class="col-sm-2">
+            <select class="form-select" name="make" data-hx-get="/models" data-hx-target="#models"
+                    data-hx-indicator=".htmx-indicator">
+                <option value="" selected></option>
+                <option data-th-each="make : ${model.makes}" data-th-value="${make.id}" data-th-text="${make.name}">Make
+                </option>
+            </select>
+        </div>
     </div>
-    <div>
-        <label>Model</label>
-        <select id="models" name="model">
-        </select>
+    <div class="row mb-3">
+        <label class="col-sm-1 col-form-label" for="models">Model</label>
+        <div class="col-sm-2">
+            <select id="models" name="model" class="form-select">
+            </select>
+        </div>
     </div>
 </div>
 </body>
