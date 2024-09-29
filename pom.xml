@@ -8,7 +8,7 @@
     <groupId>nu.staldal</groupId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>htmx with http4k and Thymeleaf template</name>
+    <name>htmx with http4k and Thymeleaf templates</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

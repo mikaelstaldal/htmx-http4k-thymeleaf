@@ -1,4 +1,4 @@
-# htmx with http4k and Thymeleaf template
+# htmx with http4k and Thymeleaf templates
 
 Using [htmx](https://htmx.org/) with [http4k](https://www.http4k.org/) and [Thymeleaf](https://www.thymeleaf.org/) templates.
 
