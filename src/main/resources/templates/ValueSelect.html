@@ -6,8 +6,7 @@
     <div class="row mb-3">
         <label class="col-sm-1 col-form-label">Make</label>
         <div class="col-sm-2">
-            <select class="form-select" name="make" data-hx-get="/models" data-hx-target="#models"
-                    data-hx-indicator=".htmx-indicator">
+            <select class="form-select" name="make" data-hx-get="/models" data-hx-target="#models">
                 <option value="" selected></option>
                 <option data-th-each="make : ${model.makes}" data-th-value="${make.id}" data-th-text="${make.name}">Make
                 </option>

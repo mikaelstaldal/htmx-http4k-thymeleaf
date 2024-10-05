@@ -1,8 +1,24 @@
 <div data-hx-target="this" data-hx-swap="outerHTML">
-    <div class="mb-1"><label>First Name</label>: [[${model.firstName}]]</div>
-    <div class="mb-1"><label>Last Name</label>: [[${model.lastName}]]</div>
-    <div class="mb-1"><label>Email</label>: [[${model.email}]]</div>
-    <button data-hx-get="/person/edit" class="btn btn-primary">
-        Click To Edit
-    </button>
+    <div class="row mb-1">
+        <label class="col-sm-1 col-form-label">First Name</label>
+        <div class="col-sm-4">
+            <input class="form-control-plaintext" type="text" readonly name="firstName"
+                   data-th-value="${model.firstName}">
+        </div>
+    </div>
+    <div class="row mb-1">
+        <label class="col-sm-1 col-form-label">Last Name</label>
+        <div class="col-sm-4">
+            <input class="form-control-plaintext" type="text" readonly name="lastName"
+                   data-th-value="${model.lastName}">
+        </div>
+    </div>
+    <div class="row mb-1">
+        <label class="col-sm-1 col-form-label">Email</label>
+        <div class="col-sm-4">
+            <input class="form-control-plaintext" type="text" readonly name="email"
+                   data-th-value="${model.email}">
+        </div>
+    </div>
+    <button class="btn btn-primary" data-hx-get="/person/edit">Click To Edit</button>
 </div>
