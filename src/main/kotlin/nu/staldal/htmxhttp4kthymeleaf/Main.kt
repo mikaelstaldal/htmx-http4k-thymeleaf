@@ -89,6 +89,13 @@ fun main() {
             } ?: Response(NOT_FOUND)
         },
 
+        "/modal-dialog" bind GET to {
+            Response(OK).with(htmlLens of ModalDialog)
+        },
+        "/modal" bind GET to {
+            Response(OK).with(htmlLens of Modal)
+        },
+
         htmxWebjars(),
         webjar("bootstrap", "5.3.3"),
     )

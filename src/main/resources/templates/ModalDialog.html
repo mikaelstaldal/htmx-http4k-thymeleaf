@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
+<body>
+<h2 data-th-fragment="title">Modal dialog using Bootstrap</h2>
+<div data-th-fragment="content">
+    <button class="btn btn-primary" data-hx-get="/modal" data-hx-target="#modals-here" data-hx-trigger="click" _="
+                    on htmx:afterOnLoad
+                    wait 10ms
+                    then add .show to #modal
+                    then add .show to #modal-backdrop
+                    ">Open modal
+    </button>
+    <div id="modals-here"></div>
+</div>
+</body>
+</html>

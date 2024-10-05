@@ -24,3 +24,6 @@ data class AgentsListInfinite(val agents: List<Agent>, val page: Int) : HtmlView
 
 data class ValueSelect(val makes: List<IdName>) : HtmlViewModel
 data class Models(val models: List<IdName>) : HtmlViewModel
+
+data object ModalDialog : HtmlViewModel
+data object Modal : HtmlViewModel
