@@ -1,1 +1,2 @@
-<option data-th-each="model : ${model.models}" data-th-value="${model.id}" data-th-text="${model.name}">Make</option>
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Models"*/-->
+<option data-th-each="carModel : ${model.models}" data-th-value="${carModel.id}" data-th-text="${carModel.name}">Make</option>

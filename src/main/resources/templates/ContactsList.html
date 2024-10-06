@@ -1,3 +1,4 @@
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.ContactsList"*/-->
 <tr data-th-each="contact : ${model.contacts}"
     class="${contact.second}? (${model.activate}? 'activate' : 'deactivate') : ''">
     <td><input type="checkbox" name="ids" value="id" data-th-value="${contact.first.id}"></td>

@@ -1,3 +1,4 @@
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.AgentsListInfinite"*/-->
 <tr data-th-each="agent,iterStat : ${model.agents}"
     data-th-attr="data-hx-get=${iterStat.last}? ${'?page=' + model.page},data-hx-trigger=${iterStat.last}? 'revealed',data-hx-swap=${iterStat.last}? 'afterend'"
 >
