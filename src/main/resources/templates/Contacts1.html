@@ -1,0 +1,39 @@
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts1"*/-->
+<!DOCTYPE html>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
+<body>
+<h2 data-th-fragment="title">Web 1.0 Contact.app</h2>
+<div data-th-fragment="content">
+    <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
+
+    <form action="/contacts1" method="get" class="tool-bar">
+        <label for="search">Search Contacts </label>
+        <input id="search" type="search" name="q" data-th-value="${model.q}?: ''"/>
+        <input type="submit" value="Search"/>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>First</th>
+            <th>Last</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-th-each="contact : ${model.contacts}">
+            <td data-th-text="${contact.firstName}">Joe Smith</td>
+            <td data-th-text="${contact.lastName}">Joe Smith</td>
+            <td data-th-text="${contact.phone}">070-12345678</td>
+            <td data-th-text="${contact.email}">joe@smith.org</td>
+            <td><a data-th-href="${'/contacts1/' + contact.id + '/edit'}">Edit</a> <a data-th-href="${'/contacts1/' + contact.id}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p><a href="/contacts1/new">Add Contact</a></p>
+</div>
+</body>
+</html>

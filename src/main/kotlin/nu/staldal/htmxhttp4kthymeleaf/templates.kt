@@ -13,8 +13,8 @@ data class ClickToEdit(val personData: PersonData) : HtmlViewModel, Person by pe
 data class ViewPerson(val personData: PersonData) : HtmlViewModel, Person by personData
 data class EditPerson(val personData: PersonData) : HtmlViewModel, Person by personData
 
-data class BulkUpdate(val contacts: Collection<Contact>) : HtmlViewModel
-data class ContactsList(val contacts: Collection<Pair<Contact, Boolean>>, val activate: Boolean) : HtmlViewModel
+data class BulkUpdate(val contacts: Collection<ContactInList>) : HtmlViewModel
+data class ContactsList(val contacts: Collection<Pair<ContactInList, Boolean>>, val activate: Boolean) : HtmlViewModel
 
 data class ClickToLoad(val agents: List<Agent>, val page: Int) : HtmlViewModel
 data class AgentsList(val agents: List<Agent>, val page: Int) : HtmlViewModel
@@ -27,3 +27,8 @@ data class Models(val models: List<IdName>) : HtmlViewModel
 
 data object ModalDialog : HtmlViewModel
 data object Modal : HtmlViewModel
+
+data class Contacts1(val contacts: Collection<Contact>, val q: String?, val flash: String? = null) : HtmlViewModel
+data class Contacts1New(val contact: Contact, val errors: Contact) : HtmlViewModel
+data class Contacts1View(val contact: Contact) : HtmlViewModel
+data class Contacts1Edit(val contact: Contact) : HtmlViewModel

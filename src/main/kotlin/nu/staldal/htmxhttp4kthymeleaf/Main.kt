@@ -8,10 +8,16 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.SEE_OTHER
+import org.http4k.core.Uri
 import org.http4k.core.isHtmx
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.ServerFilters
+import org.http4k.filter.flash
+import org.http4k.filter.removeFlash
+import org.http4k.filter.withFlash
+import org.http4k.lens.location
 import org.http4k.routing.Router.Companion.orElse
 import org.http4k.routing.bind
 import org.http4k.routing.htmxWebjars
@@ -28,6 +34,7 @@ val htmlLens = Body.viewModel(renderer, TEXT_HTML).toLens()
 
 fun main() {
     val dataStore = DataStore()
+    val contactsStore = ContactsStore()
 
     val app = routes(
         "/" bind GET to {
@@ -45,7 +52,6 @@ fun main() {
         },
         "/person" bind PUT to { request ->
             dataStore.person = personLens(request)
-            println("Person updated: ${dataStore.person}")
             Response(OK).with(htmlLens of ViewPerson(dataStore.person))
         },
 
@@ -72,7 +78,12 @@ fun main() {
         "/infinite-scroll" bind GET to routes(
             Request.isHtmx bind { request ->
                 val page = pageLens(request)
-                Response(OK).with(htmlLens of AgentsListInfinite(dataStore.agents.drop(10 * page).take(10).toList(), page + 1))
+                Response(OK).with(
+                    htmlLens of AgentsListInfinite(
+                        dataStore.agents.drop(10 * page).take(10).toList(),
+                        page + 1
+                    )
+                )
             },
             orElse bind { request ->
                 Response(OK).with(htmlLens of InfiniteScroll(dataStore.agents.take(10).toList(), 1))
@@ -96,6 +107,82 @@ fun main() {
             Response(OK).with(htmlLens of Modal)
         },
 
+        "/contacts1" bind GET to { request ->
+            val q = qLens(request)
+            val contacts = if (q != null) {
+                contactsStore.search(q)
+            } else {
+                contactsStore.all()
+            }
+            Response(OK).removeFlash().with(htmlLens of Contacts1(contacts, q, flash = request.flash()))
+        },
+        "/contacts1/new" bind GET to { request ->
+            Response(OK).with(htmlLens of Contacts1New(Contact.empty(), Contact.empty()))
+        },
+        "/contacts1/new" bind POST to { request ->
+            val contact = contactLens(request)
+            val valid = contact.firstName.isNotBlank()
+                    && contact.lastName.isNotBlank()
+                    && contact.phone.isNotBlank()
+                    && contact.email.isNotBlank()
+            if (valid) {
+                contactsStore.save(contact)
+                Response(SEE_OTHER).withFlash("Contact created").location(Uri.of("/contacts1"))
+            } else {
+                val errors = Contact(
+                    firstName = if (contact.firstName.isBlank()) "Missing first name" else "",
+                    lastName = if (contact.lastName.isBlank()) "Missing last name" else "",
+                    phone = if (contact.phone.isBlank()) "Missing phone" else "",
+                    email = if (contact.email.isBlank()) "Missing email" else "",
+                )
+                Response(OK).with(htmlLens of Contacts1New(contact, errors))
+            }
+        },
+        "/contacts1/{id}" bind GET to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                Response(OK).with(htmlLens of Contacts1View(contact))
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts1/{id}/edit" bind GET to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                Response(OK).with(htmlLens of Contacts1Edit(contact))
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts1/{id}/edit" bind POST to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                val newData = contactLens(request)
+                val newContact = contact
+                    .let { if (newData.firstName.isNotBlank()) it.copy(firstName = newData.firstName) else it }
+                    .let { if (newData.lastName.isNotBlank()) it.copy(lastName = newData.lastName) else it }
+                    .let { if (newData.phone.isNotBlank()) it.copy(phone = newData.phone) else it }
+                    .let { if (newData.email.isNotBlank()) it.copy(email = newData.email) else it }
+                contactsStore.update(newContact)
+                Response(SEE_OTHER).withFlash("Updated contact").location(Uri.of("/contacts1"))
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts1/{id}/delete" bind POST to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                contactsStore.delete(contact)
+                Response(SEE_OTHER).withFlash("Deleted contact").location(Uri.of("/contacts1"))
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+
         htmxWebjars(),
         webjar("bootstrap", "5.3.3"),
     )
@@ -109,7 +196,6 @@ fun main() {
 
 private fun activateOrDeactivateContact(request: Request, activate: Boolean, dataStore: DataStore): Response {
     val ids = idsLens(request)
-    println("${if (activate) "Activating" else "Deactivating"} contacts: $ids")
     val mutated = ids.mapNotNull { id ->
         dataStore.contacts[id]?.let {
             if (it.active xor activate) {
@@ -118,5 +204,10 @@ private fun activateOrDeactivateContact(request: Request, activate: Boolean, dat
             } else null
         }
     }.toSet()
-    return Response(OK).with(htmlLens of ContactsList(dataStore.contacts.values.map { it to mutated.contains(it.id) }, activate))
+    return Response(OK).with(
+        htmlLens of ContactsList(
+            dataStore.contacts.values.map { it to mutated.contains(it.id) },
+            activate
+        )
+    )
 }

@@ -1,0 +1,45 @@
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts1Edit"*/-->
+<!DOCTYPE html>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
+<body>
+<h2 data-th-fragment="title">Web 1.0 Contact.app</h2>
+<div data-th-fragment="content">
+    <form data-th-action="${'/contacts1/' + model.contact.id + '/edit'}" method="post">
+        <fieldset>
+            <legend>Contact Values</legend>
+            <div class="table rows">
+                <p>
+                    <label for="email">Email</label>
+                    <input name="email" id="email" type="text" placeholder="Email"
+                           data-th-value="${model.contact.email}">
+                </p>
+                <p>
+                    <label for="firstName">First Name</label>
+                    <input name="firstName" id="firstName" type="text" placeholder="First Name"
+                           data-th-value="${model.contact.firstName}">
+                </p>
+                <p>
+                    <label for="lastName">Last Name</label>
+                    <input name="lastName" id="lastName" type="text" placeholder="Last Name"
+                           data-th-value="${model.contact.lastName}">
+                </p>
+                <p>
+                    <label for="phone">Phone</label>
+                    <input name="phone" id="phone" type="text" placeholder="Phone"
+                           data-th-value="${model.contact.phone}">
+                </p>
+            </div>
+            <button>Save</button>
+        </fieldset>
+    </form>
+
+    <form data-th-action="${'/contacts1/' + model.contact.id + '/delete'}" method="post">
+        <button>Delete Contact</button>
+    </form>
+
+    <p>
+        <a href="/contacts1">Back</a>
+    </p>
+</div>
+</body>
+</html>

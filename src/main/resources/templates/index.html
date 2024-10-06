@@ -2,26 +2,34 @@
 <html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
 <body>
 <h2 data-th-fragment="title">Examples</h2>
-<h3>htmx UI</h3>
-<ul data-th-fragment="content">
-    <li>
-        <a href="/click-to-edit">Click to edit</a>
-    </li>
-    <li>
-        <a href="/bulk-update">Bulk update</a>
-    </li>
-    <li>
-        <a href="/click-to-load">Click to load</a>
-    </li>
-    <li>
-        <a href="/infinite-scroll">Infinite scroll</a>
-    </li>
-    <li>
-        <a href="/value-select">Value select</a>
-    </li>
-    <li>
-        <a href="/modal-dialog">Modal dialog using Bootstrap</a>
-    </li>
-</ul>
+<div data-th-fragment="content">
+    <h3>htmx UI</h3>
+    <ul>
+        <li>
+            <a href="/click-to-edit">Click to edit</a>
+        </li>
+        <li>
+            <a href="/bulk-update">Bulk update</a>
+        </li>
+        <li>
+            <a href="/click-to-load">Click to load</a>
+        </li>
+        <li>
+            <a href="/infinite-scroll">Infinite scroll</a>
+        </li>
+        <li>
+            <a href="/value-select">Value select</a>
+        </li>
+        <li>
+            <a href="/modal-dialog">Modal dialog using Bootstrap</a>
+        </li>
+    </ul>
+    <h3>Complete use cases</h3>
+    <ul>
+        <li>
+            <a href="/contacts1">Web 1.0 Contact.app</a> (ported from <a href="https://github.com/bigskysoftware/contact-app">Contact.app</a>)
+        </li>
+    </ul>
+</div>
 </body>
 </html>

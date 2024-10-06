@@ -5,11 +5,11 @@ import java.util.UUID
 class DataStore {
     var person = PersonData("Bob", "Smith", "bsmith@example.com")
 
-    val contacts: Map<String, Contact> = listOf(
-        Contact(UUID.randomUUID().toString(), "Joe Smith", "joe@smith.org", true),
-        Contact(UUID.randomUUID().toString(), "Angie MacDowell", "angie@macdowell.org", true),
-        Contact(UUID.randomUUID().toString(), "Fuqua Tarkenton", "fuqua@tarkenton.org", true),
-        Contact(UUID.randomUUID().toString(), "Kim Yee", "kim@yee.org", false)
+    val contacts: Map<String, ContactInList> = listOf(
+        ContactInList(UUID.randomUUID().toString(), "Joe Smith", "joe@smith.org", true),
+        ContactInList(UUID.randomUUID().toString(), "Angie MacDowell", "angie@macdowell.org", true),
+        ContactInList(UUID.randomUUID().toString(), "Fuqua Tarkenton", "fuqua@tarkenton.org", true),
+        ContactInList(UUID.randomUUID().toString(), "Kim Yee", "kim@yee.org", false)
     ).associateBy { it.id }
 
     val agents = generateSequence(Agent(1, "Agent Smith", "void1@null.com", UUID.randomUUID().toString())) {
