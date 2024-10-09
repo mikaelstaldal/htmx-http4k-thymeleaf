@@ -30,7 +30,7 @@ val qLens = Query.string().optional("q")
 
 val contactLens = Body.webForm(Validator.Ignore, firstNameField, lastNameField, phoneField, emailField)
     .map {
-        Contact(
+        ContactData(
             firstName = firstNameField(it) ?: "",
             lastName = lastNameField(it) ?: "",
             phone = phoneField(it) ?: "",

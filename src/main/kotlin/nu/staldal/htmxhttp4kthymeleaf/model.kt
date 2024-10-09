@@ -15,21 +15,24 @@ data class Agent(val number: Int, val name: String, val email: String, val id: S
 
 data class IdName(val id: String, val name: String)
 
-data class Todo(val id: String, val description: String, var done: Boolean = false)
-
-data class Contact(
-    val id: String? = null,
-    val firstName: String,
-    val lastName: String,
-    val phone: String,
-    val email: String,
-) {
-    companion object {
-        fun empty() = Contact(
-            firstName = "",
-            lastName = "",
-            phone = "",
-            email = ""
-        )
-    }
+interface Contact {
+    val firstName: String
+    val lastName: String
+    val phone: String
+    val email: String
 }
+
+data class ContactData(
+    override val firstName: String = "",
+    override val lastName: String = "",
+    override val phone: String = "",
+    override val email: String = "",
+) : Contact
+
+data class StoredContact(
+    val id: String,
+    override val firstName: String,
+    override val lastName: String,
+    override val phone: String,
+    override val email: String,
+) : Contact

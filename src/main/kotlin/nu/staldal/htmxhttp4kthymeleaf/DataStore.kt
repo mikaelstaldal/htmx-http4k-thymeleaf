@@ -22,11 +22,4 @@ class DataStore {
         "toyota" to listOf(IdName("landcruiser", "Landcruiser"), IdName("tacoma", "Tacoma"), IdName("yaris", "Yaris")),
         "bmw" to listOf(IdName("325i", "325i"), IdName("325ix", "325ix"), IdName("X5", "X5"))
     )
-
-    private val todo1 = Todo(UUID.randomUUID().toString(), "First thing", done = true)
-    private val todo2 = Todo(UUID.randomUUID().toString(), "Second thing")
-    val todos = mutableMapOf(
-        todo1.id to todo1,
-        todo2.id to todo2
-    )
 }

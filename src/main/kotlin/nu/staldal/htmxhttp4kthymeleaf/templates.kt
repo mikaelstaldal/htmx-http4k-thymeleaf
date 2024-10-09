@@ -28,7 +28,12 @@ data class Models(val models: List<IdName>) : HtmlViewModel
 data object ModalDialog : HtmlViewModel
 data object Modal : HtmlViewModel
 
-data class Contacts1(val contacts: Collection<Contact>, val q: String?, val flash: String? = null) : HtmlViewModel
+data class Contacts1(val contacts: Collection<StoredContact>, val q: String?, val flash: String? = null) : HtmlViewModel
 data class Contacts1New(val contact: Contact, val errors: Contact) : HtmlViewModel
-data class Contacts1View(val contact: Contact) : HtmlViewModel
-data class Contacts1Edit(val contact: Contact) : HtmlViewModel
+data class Contacts1View(val contact: StoredContact) : HtmlViewModel
+data class Contacts1Edit(val contact: StoredContact, val errors: Contact) : HtmlViewModel
+
+data class Contacts2(val contacts: Collection<StoredContact>, val q: String?, val flash: String? = null) : HtmlViewModel
+data class Contacts2New(val contact: Contact, val errors: Contact) : HtmlViewModel
+data class Contacts2View(val contact: StoredContact) : HtmlViewModel
+data class Contacts2Edit(val contact: StoredContact, val errors: Contact) : HtmlViewModel

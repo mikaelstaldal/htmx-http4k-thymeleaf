@@ -1,35 +1,31 @@
-<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts1Edit"*/-->
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2New"*/-->
 <!DOCTYPE html>
 <html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
 <body>
-<h2 data-th-fragment="title">Web 1.0 Contact.app</h2>
+<h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
-    <form data-th-action="${'/contacts1/' + model.contact.id + '/edit'}" method="post">
+    <form action="/contacts2/new" method="post">
         <fieldset>
             <legend>Contact Values</legend>
             <div class="table rows">
                 <p>
                     <label for="email">Email</label>
-                    <input name="email" id="email" type="text" placeholder="Email"
-                           data-th-value="${model.contact.email}">
+                    <input name="email" id="email" type="text" placeholder="Email" data-th-value="${model.contact.email}">
                     <span class="error" data-th-text="${model.errors.email}"/>
                 </p>
                 <p>
                     <label for="firstName">First Name</label>
-                    <input name="firstName" id="firstName" type="text" placeholder="First Name"
-                           data-th-value="${model.contact.firstName}">
+                    <input name="firstName" id="firstName" type="text" placeholder="First Name" data-th-value="${model.contact.firstName}">
                     <span class="error" data-th-text="${model.errors.firstName}"/>
                 </p>
                 <p>
                     <label for="lastName">Last Name</label>
-                    <input name="lastName" id="lastName" type="text" placeholder="Last Name"
-                           data-th-value="${model.contact.lastName}">
+                    <input name="lastName" id="lastName" type="text" placeholder="Last Name" data-th-value="${model.contact.lastName}">
                     <span class="error" data-th-text="${model.errors.lastName}"/>
                 </p>
                 <p>
                     <label for="phone">Phone</label>
-                    <input name="phone" id="phone" type="text" placeholder="Phone"
-                           data-th-value="${model.contact.phone}">
+                    <input name="phone" id="phone" type="text" placeholder="Phone" data-th-value="${model.contact.phone}">
                     <span class="error" data-th-text="${model.errors.phone}"/>
                 </p>
             </div>
@@ -37,12 +33,8 @@
         </fieldset>
     </form>
 
-    <form data-th-action="${'/contacts1/' + model.contact.id + '/delete'}" method="post">
-        <button>Delete Contact</button>
-    </form>
-
     <p>
-        <a href="/contacts1">Back</a>
+        <a href="/contacts2">Back</a>
     </p>
 </div>
 </body>

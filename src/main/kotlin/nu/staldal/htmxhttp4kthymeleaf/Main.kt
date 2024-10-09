@@ -1,5 +1,8 @@
 package nu.staldal.htmxhttp4kthymeleaf
 
+import dev.forkhandles.result4k.get
+import dev.forkhandles.result4k.map
+import dev.forkhandles.result4k.mapFailure
 import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.TEXT_HTML
 import org.http4k.core.Method.*
@@ -117,26 +120,15 @@ fun main() {
             Response(OK).removeFlash().with(htmlLens of Contacts1(contacts, q, flash = request.flash()))
         },
         "/contacts1/new" bind GET to { request ->
-            Response(OK).with(htmlLens of Contacts1New(Contact.empty(), Contact.empty()))
+            Response(OK).with(htmlLens of Contacts1New(ContactData(), ContactData()))
         },
         "/contacts1/new" bind POST to { request ->
             val contact = contactLens(request)
-            val valid = contact.firstName.isNotBlank()
-                    && contact.lastName.isNotBlank()
-                    && contact.phone.isNotBlank()
-                    && contact.email.isNotBlank()
-            if (valid) {
-                contactsStore.save(contact)
+            contactsStore.add(contact).map {
                 Response(SEE_OTHER).withFlash("Contact created").location(Uri.of("/contacts1"))
-            } else {
-                val errors = Contact(
-                    firstName = if (contact.firstName.isBlank()) "Missing first name" else "",
-                    lastName = if (contact.lastName.isBlank()) "Missing last name" else "",
-                    phone = if (contact.phone.isBlank()) "Missing phone" else "",
-                    email = if (contact.email.isBlank()) "Missing email" else "",
-                )
-                Response(OK).with(htmlLens of Contacts1New(contact, errors))
-            }
+            }.mapFailure {
+                Response(OK).with(htmlLens of Contacts1New(contact, it))
+            }.get()
         },
         "/contacts1/{id}" bind GET to { request ->
             val id = idLens(request)
@@ -151,7 +143,7 @@ fun main() {
             val id = idLens(request)
             val contact = contactsStore.find(id)
             if (contact != null) {
-                Response(OK).with(htmlLens of Contacts1Edit(contact))
+                Response(OK).with(htmlLens of Contacts1Edit(contact, ContactData()))
             } else {
                 Response(NOT_FOUND)
             }
@@ -166,8 +158,11 @@ fun main() {
                     .let { if (newData.lastName.isNotBlank()) it.copy(lastName = newData.lastName) else it }
                     .let { if (newData.phone.isNotBlank()) it.copy(phone = newData.phone) else it }
                     .let { if (newData.email.isNotBlank()) it.copy(email = newData.email) else it }
-                contactsStore.update(newContact)
-                Response(SEE_OTHER).withFlash("Updated contact").location(Uri.of("/contacts1"))
+                contactsStore.update(newContact).map {
+                    Response(SEE_OTHER).withFlash("Updated contact").location(Uri.of("/contacts1"))
+                }.mapFailure {
+                    Response(OK).with(htmlLens of Contacts1Edit(contact, it))
+                }.get()
             } else {
                 Response(NOT_FOUND)
             }
@@ -176,8 +171,82 @@ fun main() {
             val id = idLens(request)
             val contact = contactsStore.find(id)
             if (contact != null) {
-                contactsStore.delete(contact)
-                Response(SEE_OTHER).withFlash("Deleted contact").location(Uri.of("/contacts1"))
+                contactsStore.delete(contact).map {
+                    Response(SEE_OTHER).withFlash("Deleted contact").location(Uri.of("/contacts1"))
+                }.mapFailure {
+                    Response(SEE_OTHER).withFlash("Unable to delete contact").location(Uri.of("/contacts1"))
+                }.get()
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+
+        "/contacts2" bind GET to { request ->
+            val q = qLens(request)
+            val contacts = if (q != null) {
+                contactsStore.search(q)
+            } else {
+                contactsStore.all()
+            }
+            Response(OK).removeFlash().with(htmlLens of Contacts2(contacts, q, flash = request.flash()))
+        },
+        "/contacts2/new" bind GET to { request ->
+            Response(OK).with(htmlLens of Contacts2New(ContactData(), ContactData()))
+        },
+        "/contacts2/new" bind POST to { request ->
+            val contact = contactLens(request)
+            contactsStore.add(contact).map {
+                Response(SEE_OTHER).withFlash("Contact created").location(Uri.of("/contacts2"))
+            }.mapFailure {
+                Response(OK).with(htmlLens of Contacts2New(contact, it))
+            }.get()
+        },
+        "/contacts2/{id}" bind GET to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                Response(OK).with(htmlLens of Contacts2View(contact))
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts2/{id}/edit" bind GET to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                Response(OK).with(htmlLens of Contacts2Edit(contact, ContactData()))
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts2/{id}/edit" bind POST to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                val newData = contactLens(request)
+                val newContact = contact
+                    .let { if (newData.firstName.isNotBlank()) it.copy(firstName = newData.firstName) else it }
+                    .let { if (newData.lastName.isNotBlank()) it.copy(lastName = newData.lastName) else it }
+                    .let { if (newData.phone.isNotBlank()) it.copy(phone = newData.phone) else it }
+                    .let { if (newData.email.isNotBlank()) it.copy(email = newData.email) else it }
+                contactsStore.update(newContact).map {
+                    Response(SEE_OTHER).withFlash("Updated contact").location(Uri.of("/contacts2"))
+                }.mapFailure {
+                    Response(OK).with(htmlLens of Contacts2Edit(contact, it))
+                }.get()
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts2/{id}" bind DELETE to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                contactsStore.delete(contact).map {
+                    Response(SEE_OTHER).withFlash("Deleted contact").location(Uri.of("/contacts2"))
+                }.mapFailure {
+                    Response(SEE_OTHER).withFlash("Unable to delete contact").location(Uri.of("/contacts2"))
+                }.get()
             } else {
                 Response(NOT_FOUND)
             }

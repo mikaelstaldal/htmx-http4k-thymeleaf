@@ -1,0 +1,20 @@
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2View"*/-->
+<!DOCTYPE html>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
+<body>
+<h2 data-th-fragment="title">htmx powered Contact.app</h2>
+<div data-th-fragment="content">
+    <h3 data-th-text="${model.contact.firstName + ' ' + model.contact.lastName}"/>
+
+    <div>
+        <div data-th-text="${'Phone: ' + model.contact.phone}"/>
+        <div data-th-text="${'Email: ' + model.contact.email}"/>
+    </div>
+
+    <p>
+        <a data-th-href="${'/contacts2/' + model.contact.id + '/edit'}">Edit</a>
+        <a href="/contacts2">Back</a>
+    </p>
+</div>
+</body>
+</html>
