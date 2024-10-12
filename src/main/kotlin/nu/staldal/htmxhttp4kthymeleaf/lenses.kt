@@ -28,6 +28,8 @@ val makeLens = Query.string().required("make")
 
 val qLens = Query.string().optional("q")
 
+val idLens = Path.of("id")
+
 val contactLens = Body.webForm(Validator.Ignore, firstNameField, lastNameField, phoneField, emailField)
     .map {
         ContactData(
@@ -39,4 +41,4 @@ val contactLens = Body.webForm(Validator.Ignore, firstNameField, lastNameField, 
     }
     .toLens()
 
-val idLens = Path.of("id")
+val emailLens = Query.string().required("email")

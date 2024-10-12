@@ -10,7 +10,11 @@
             <div class="table rows">
                 <p>
                     <label for="email">Email</label>
-                    <input name="email" id="email" type="text" placeholder="Email"
+                    <input name="email" id="email" type="email"
+                           data-th-attr="data-hx-get=${'/contacts2/' + model.contact.id + '/email'}"
+                           data-hx-target="next .error"
+                           data-hx-trigger="change, keyup delay:200ms changed"
+                           placeholder="Email"
                            data-th-value="${model.contact.email}">
                     <span class="error" data-th-text="${model.errors.email}"/>
                 </p>

@@ -6,6 +6,8 @@ import dev.forkhandles.result4k.Success
 import dev.forkhandles.result4k.map
 import java.util.UUID
 
+val emailRegex = Regex("""^[a-zA-Z0-9.!#${'$'}%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*${'$'}""")
+
 class ContactsStore {
     private val contacts: MutableMap<String, StoredContact> = listOf(
         StoredContact(
@@ -74,7 +76,7 @@ class ContactsStore {
 
     fun validate(contact: Contact, id: String): Result<Contact, ContactData> {
         if (contact.email.isEmpty()) return Failure(ContactData(email = "Missing email"))
-        if (!contact.email.contains("@")) return Failure(ContactData(email = "Invalid email"))
+        if (!emailRegex.matches(contact.email)) return Failure(ContactData(email = "Invalid email"))
         if ((contacts.values.filter { it.id != id }.map { it.email }.toSet().contains(contact.email)))
             return Failure(ContactData(email = "Duplicate email"))
         return Success(contact)

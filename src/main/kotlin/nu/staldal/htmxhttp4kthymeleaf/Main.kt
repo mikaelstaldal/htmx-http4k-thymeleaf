@@ -21,6 +21,7 @@ import org.http4k.filter.flash
 import org.http4k.filter.removeFlash
 import org.http4k.filter.withFlash
 import org.http4k.lens.location
+import org.http4k.lens.string
 import org.http4k.routing.Router.Companion.orElse
 import org.http4k.routing.bind
 import org.http4k.routing.htmxWebjars
@@ -34,6 +35,7 @@ private const val port = 8000
 
 val renderer = ThymeleafTemplates().CachingClasspath("templates")
 val htmlLens = Body.viewModel(renderer, TEXT_HTML).toLens()
+val rawHtmlLens = Body.string(TEXT_HTML).toLens()
 
 fun main() {
     val dataStore = DataStore()
@@ -201,6 +203,15 @@ fun main() {
                 Response(OK).with(htmlLens of Contacts2New(contact, it))
             }.get()
         },
+        "/contacts2/email" bind GET to { request ->
+            val newEmail = emailLens(request)
+            val responseText = contactsStore.validate(ContactData(email = newEmail), "").map {
+                ""
+            }.mapFailure {
+                it.email
+            }.get()
+            Response(OK).with(rawHtmlLens of responseText)
+        },
         "/contacts2/{id}" bind GET to { request ->
             val id = idLens(request)
             val contact = contactsStore.find(id)
@@ -234,6 +245,21 @@ fun main() {
                 }.mapFailure {
                     Response(OK).with(htmlLens of Contacts2Edit(contact, it))
                 }.get()
+            } else {
+                Response(NOT_FOUND)
+            }
+        },
+        "/contacts2/{id}/email" bind GET to { request ->
+            val id = idLens(request)
+            val contact = contactsStore.find(id)
+            if (contact != null) {
+                val newEmail = emailLens(request)
+                val responseText = contactsStore.validate(contact.copy(email = newEmail), id).map {
+                    ""
+                }.mapFailure {
+                    it.email
+                }.get()
+                Response(OK).with(rawHtmlLens of responseText)
             } else {
                 Response(NOT_FOUND)
             }
