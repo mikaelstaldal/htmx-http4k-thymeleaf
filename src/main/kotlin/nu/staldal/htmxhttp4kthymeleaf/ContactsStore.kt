@@ -27,15 +27,17 @@ data class StoredContact(
         lastName: String,
         phone: String,
         email: String,
-    ) : this(id = sha256(email),
-    firstName = firstName,
-    lastName = lastName,
-    phone = phone,
-    email = email)
+    ) : this(
+        id = sha256(email),
+        firstName = firstName,
+        lastName = lastName,
+        phone = phone,
+        email = email
+    )
 }
 
 class ContactsStore {
-    private val contacts: MutableMap<String, StoredContact> = listOf(
+    private val contacts: MutableMap<String, StoredContact> = (listOf(
         StoredContact(
             firstName = "Joe",
             lastName = "Smith",
@@ -59,8 +61,16 @@ class ContactsStore {
             lastName = "Yee",
             phone = "070-45678912",
             email = "kim@yee.org"
-        ),
-    ).associateBy { it.id }.toMutableMap()
+        )
+    ) + (1..100).map {
+        StoredContact(
+            firstName = "John",
+            lastName = "Doe $it",
+            phone = "1-234-567-1234",
+            email = "john.doe$it@doe.com"
+        )
+    }
+            ).associateBy { it.id }.toMutableMap()
 
     fun all(): Collection<StoredContact> = contacts.values
 
