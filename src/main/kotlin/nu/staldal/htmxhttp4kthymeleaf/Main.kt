@@ -22,10 +22,12 @@ import org.http4k.filter.removeFlash
 import org.http4k.filter.withFlash
 import org.http4k.lens.location
 import org.http4k.lens.string
+import org.http4k.routing.ResourceLoader.Companion.Classpath
 import org.http4k.routing.Router.Companion.orElse
 import org.http4k.routing.bind
 import org.http4k.routing.htmxWebjars
 import org.http4k.routing.routes
+import org.http4k.routing.static
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import org.http4k.template.ThymeleafTemplates
@@ -120,7 +122,8 @@ fun main() {
             } else {
                 contactsStore.all(page, 10)
             }
-            Response(OK).removeFlash().with(htmlLens of Contacts1(contacts, q, page, pageSize = 10, flash = request.flash()))
+            Response(OK).removeFlash()
+                .with(htmlLens of Contacts1(contacts, q, page, pageSize = 10, flash = request.flash()))
         },
         "/contacts1/new" bind GET to { request ->
             Response(OK).with(htmlLens of Contacts1New(ContactData(), ContactData()))
@@ -184,16 +187,31 @@ fun main() {
             }
         },
 
-        "/contacts2" bind GET to { request ->
-            val q = qLens(request)
-            val page = pageLens(request)
-            val contacts = if (q != null) {
-                contactsStore.search(q, page, 10)
-            } else {
-                contactsStore.all(page, 10)
-            }
-            Response(OK).removeFlash().with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
-        },
+        "/contacts2" bind GET to routes(
+            Request.isHtmx bind { request ->
+                val q = qLens(request)
+                val page = pageLens(request)
+                val contacts = if (!q.isNullOrEmpty()) {
+                    if (page == 0) Thread.sleep(1000) // demo request indicator
+                    contactsStore.search(q, page, 10)
+                } else {
+                    contactsStore.all(page, 10)
+                }
+                Response(OK).header("Vary", "HX-Request")
+                    .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
+            },
+            orElse bind { request ->
+                val q = qLens(request)
+                val page = pageLens(request)
+                val contacts = if (!q.isNullOrEmpty()) {
+                    if (page == 0) Thread.sleep(1000) // demo request indicator
+                    contactsStore.search(q, page, 10)
+                } else {
+                    contactsStore.all(page, 10)
+                }
+                Response(OK).removeFlash().header("Vary", "HX-Request")
+                    .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
+            }),
         "/contacts2/new" bind GET to { request ->
             Response(OK).with(htmlLens of Contacts2New(ContactData(), ContactData()))
         },
@@ -280,6 +298,7 @@ fun main() {
             }
         },
 
+        static(Classpath("static")),
         htmxWebjars(),
         webjar("bootstrap", "5.3.3"),
     )

@@ -41,6 +41,9 @@ data class Contacts2(
     val contacts: Collection<StoredContact>, val q: String?, val page: Int, val pageSize: Int,
     val flash: String? = null
 ) : HtmlViewModel
+data class Contacts2Rows(
+    val contacts: Collection<StoredContact>, val q: String?, val page: Int, val pageSize: Int,
+) : HtmlViewModel
 
 data class Contacts2New(val contact: Contact, val errors: Contact) : HtmlViewModel
 data class Contacts2View(val contact: StoredContact) : HtmlViewModel

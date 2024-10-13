@@ -8,7 +8,18 @@
 
     <form action="/contacts2" method="get" class="tool-bar">
         <label for="search">Search Contacts </label>
-        <input id="search" type="search" name="q" data-th-value="${model.q}?: ''"/>
+        <input id="search" type="search" name="q"
+               data-th-value="${model.q}?: ''"
+               data-hx-get="/contacts2"
+               data-hx-trigger="search, keyup delay:200ms changed"
+               data-hx-target="tbody"
+               data-hx-push-url="true"
+               data-hx-indicator="#spinner"
+        />
+        <img id="spinner" class="htmx-indicator"
+             width="58" height="58"
+             src="/img/spinning-circles.svg"
+        alt="Request In Flight..."/>
         <input type="submit" value="Search"/>
     </form>
 
@@ -22,34 +33,7 @@
             <th></th>
         </tr>
         </thead>
-        <tbody>
-        <tr data-th-each="contact : ${model.contacts}">
-            <td data-th-text="${contact.firstName}">Joe Smith</td>
-            <td data-th-text="${contact.lastName}">Joe Smith</td>
-            <td data-th-text="${contact.phone}">070-12345678</td>
-            <td data-th-text="${contact.email}">joe@smith.org</td>
-            <td><a data-th-href="${'/contacts2/' + contact.id + '/edit'}">Edit</a> <a data-th-href="${'/contacts2/' + contact.id}">View</a></td>
-        </tr>
-        <tr data-th-if="${model.contacts.size() eq model.pageSize}">
-            <td colspan="5">
-                <button data-hx-target="closest tr"
-                data-hx-swap="outerHTML"
-                data-hx-select="tbody > tr"
-                data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Load more</button>
-            </td>
-        </tr>
-<!-- infinite scroll
-        <tr data-th-if="${model.contacts.size() eq model.pageSize}">
-            <td colspan="5">
-                <span data-hx-target="closest tr"
-                      data-hx-trigger="revealed"
-                      data-hx-swap="outerHTML"
-                      data-hx-select="tbody > tr"
-                      data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Loading more...</span>
-            </td>
-        </tr>
-        -->
-        </tbody>
+        <tbody data-th-insert="~{Contacts2Rows}"></tbody>
     </table>
     <p><a href="/contacts2/new">Add Contact</a></p>
 </div>

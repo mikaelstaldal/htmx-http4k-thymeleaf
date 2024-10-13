@@ -1,0 +1,29 @@
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2Rows"*/-->
+<tr data-th-each="contact : ${model.contacts}">
+    <td data-th-text="${contact.firstName}">Joe Smith</td>
+    <td data-th-text="${contact.lastName}">Joe Smith</td>
+    <td data-th-text="${contact.phone}">070-12345678</td>
+    <td data-th-text="${contact.email}">joe@smith.org</td>
+    <td><a data-th-href="${'/contacts2/' + contact.id + '/edit'}">Edit</a> <a
+            data-th-href="${'/contacts2/' + contact.id}">View</a></td>
+</tr>
+<tr data-th-if="${model.contacts.size() eq model.pageSize}">
+    <td colspan="5">
+        <button
+                data-hx-target="closest tr"
+                data-hx-swap="outerHTML"
+                data-th-attr="data-hx-get='/contacts2?' + ${(model.q != null)? ('q='+model.q+'&') : ''} + 'page=' + ${model.page + 1}"
+        >Load more
+        </button>
+    </td>
+</tr>
+<!--/* infinite scroll
+<tr data-th-if="${model.contacts.size() eq model.pageSize}">
+    <td colspan="5">
+        <span data-hx-target="closest tr"
+              data-hx-trigger="revealed"
+              data-hx-swap="outerHTML"
+              data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Loading more...</span>
+    </td>
+</tr>
+*/-->
