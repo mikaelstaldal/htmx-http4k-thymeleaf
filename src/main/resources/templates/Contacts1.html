@@ -32,6 +32,12 @@
         </tr>
         </tbody>
     </table>
+    <div>
+        <span>
+            <a data-th-if="${model.page gt 0}" data-th-href="'/contacts1?page=' + ${model.page - 1}">Previous</a>
+            <a data-th-if="${model.contacts.size() eq model.pageSize}" data-th-href="'/contacts1?page=' + ${model.page + 1}">Next</a>
+        </span>
+    </div>
 
     <p><a href="/contacts1/new">Add Contact</a></p>
 </div>
