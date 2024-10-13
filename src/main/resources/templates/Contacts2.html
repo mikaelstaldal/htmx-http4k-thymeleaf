@@ -38,6 +38,17 @@
                 data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Load more</button>
             </td>
         </tr>
+<!-- infinite scroll
+        <tr data-th-if="${model.contacts.size() eq model.pageSize}">
+            <td colspan="5">
+                <span data-hx-target="closest tr"
+                      data-hx-trigger="revealed"
+                      data-hx-swap="outerHTML"
+                      data-hx-select="tbody > tr"
+                      data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Loading more...</span>
+            </td>
+        </tr>
+        -->
         </tbody>
     </table>
     <p><a href="/contacts2/new">Add Contact</a></p>
