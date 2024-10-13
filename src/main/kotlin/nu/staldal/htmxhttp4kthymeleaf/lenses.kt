@@ -22,7 +22,7 @@ val idsLens =
     Body.webForm(Validator.Ignore, idsField).map { if (it.fields.containsKey("ids")) idsField(it) else emptyList() }
         .toLens()
 
-val pageLens = Query.int().required("page")
+val pageLens = Query.int().defaulted("page", 0)
 
 val makeLens = Query.string().required("make")
 

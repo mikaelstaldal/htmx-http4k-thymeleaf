@@ -115,9 +115,9 @@ fun main() {
         "/contacts1" bind GET to { request ->
             val q = qLens(request)
             val contacts = if (q != null) {
-                contactsStore.search(q)
+                contactsStore.search(q, 0, Int.MAX_VALUE)
             } else {
-                contactsStore.all()
+                contactsStore.all(0, Int.MAX_VALUE)
             }
             Response(OK).removeFlash().with(htmlLens of Contacts1(contacts, q, flash = request.flash()))
         },
@@ -185,12 +185,13 @@ fun main() {
 
         "/contacts2" bind GET to { request ->
             val q = qLens(request)
+            val page = pageLens(request)
             val contacts = if (q != null) {
-                contactsStore.search(q)
+                contactsStore.search(q, page, 10)
             } else {
-                contactsStore.all()
+                contactsStore.all(page, 10)
             }
-            Response(OK).removeFlash().with(htmlLens of Contacts2(contacts, q, flash = request.flash()))
+            Response(OK).removeFlash().with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
         },
         "/contacts2/new" bind GET to { request ->
             Response(OK).with(htmlLens of Contacts2New(ContactData(), ContactData()))

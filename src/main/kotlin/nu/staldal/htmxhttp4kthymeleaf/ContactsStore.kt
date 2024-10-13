@@ -72,11 +72,11 @@ class ContactsStore {
     }
             ).associateBy { it.id }.toMutableMap()
 
-    fun all(): Collection<StoredContact> = contacts.values
+    fun all(page: Int, limit: Int): List<StoredContact> = contacts.values.sortedBy { it.email }.drop(page * limit).take(limit)
 
-    fun search(text: String): Collection<StoredContact> = contacts.values.filter {
+    fun search(text: String, page: Int, limit: Int): List<StoredContact> = contacts.values.filter {
         it.firstName.contains(text) || it.lastName.contains(text) || it.phone.contains(text) || it.email.contains(text)
-    }
+    }.sortedBy { it.email }.drop(page * limit).take(limit)
 
     fun find(id: String): StoredContact? = contacts[id]
 
