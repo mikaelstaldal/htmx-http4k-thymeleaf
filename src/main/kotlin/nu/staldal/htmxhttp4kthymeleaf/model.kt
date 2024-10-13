@@ -28,11 +28,3 @@ data class ContactData(
     override val phone: String = "",
     override val email: String = "",
 ) : Contact
-
-data class StoredContact(
-    val id: String,
-    override val firstName: String,
-    override val lastName: String,
-    override val phone: String,
-    override val email: String,
-) : Contact

@@ -4,35 +4,57 @@ import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Result
 import dev.forkhandles.result4k.Success
 import dev.forkhandles.result4k.map
-import java.util.UUID
+import java.security.MessageDigest
+import kotlin.String
 
-val emailRegex = Regex("""^[a-zA-Z0-9.!#${'$'}%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*${'$'}""")
+val emailRegex =
+    Regex("""^[a-zA-Z0-9.!#${'$'}%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*${'$'}""")
+
+@OptIn(ExperimentalStdlibApi::class)
+fun sha256(data: String): String = MessageDigest.getInstance("SHA-256").apply {
+    update(data.toByteArray())
+}.digest().toHexString()
+
+data class StoredContact(
+    val id: String,
+    override val firstName: String,
+    override val lastName: String,
+    override val phone: String,
+    override val email: String,
+) : Contact {
+    constructor(
+        firstName: String,
+        lastName: String,
+        phone: String,
+        email: String,
+    ) : this(id = sha256(email),
+    firstName = firstName,
+    lastName = lastName,
+    phone = phone,
+    email = email)
+}
 
 class ContactsStore {
     private val contacts: MutableMap<String, StoredContact> = listOf(
         StoredContact(
-            UUID.randomUUID().toString(),
             firstName = "Joe",
             lastName = "Smith",
             phone = "070-12345678",
             email = "joe@smith.org"
         ),
         StoredContact(
-            UUID.randomUUID().toString(),
             firstName = "Angie",
             lastName = "MacDowell",
             phone = "070-23456789",
             email = "angie@macdowell.org"
         ),
         StoredContact(
-            UUID.randomUUID().toString(),
             firstName = "Fuqua",
             lastName = "Tarkenton",
             phone = "070-34567890",
             email = "fuqua@tarkenton.org"
         ),
         StoredContact(
-            UUID.randomUUID().toString(),
             firstName = "Kim",
             lastName = "Yee",
             phone = "070-45678912",
@@ -49,7 +71,7 @@ class ContactsStore {
     fun find(id: String): StoredContact? = contacts[id]
 
     fun add(contact: Contact): Result<StoredContact, ContactData> {
-        val id = UUID.randomUUID().toString()
+        val id = sha256(contact.email)
         return validate(contact, id).map {
             val newContact =
                 StoredContact(id, firstName = it.firstName, lastName = it.lastName, phone = it.phone, email = it.email)
