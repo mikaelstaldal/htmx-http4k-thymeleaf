@@ -30,15 +30,16 @@
             <td data-th-text="${contact.email}">joe@smith.org</td>
             <td><a data-th-href="${'/contacts2/' + contact.id + '/edit'}">Edit</a> <a data-th-href="${'/contacts2/' + contact.id}">View</a></td>
         </tr>
+        <tr data-th-if="${model.contacts.size() eq model.pageSize}">
+            <td colspan="5">
+                <button data-hx-target="closest tr"
+                data-hx-swap="outerHTML"
+                data-hx-select="tbody > tr"
+                data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Load more</button>
+            </td>
+        </tr>
         </tbody>
     </table>
-    <div>
-        <span>
-            <a data-th-if="${model.page gt 0}" data-th-href="'/contacts2?page=' + ${model.page - 1}">Previous</a>
-            <a data-th-if="${model.contacts.size() eq model.pageSize}" data-th-href="'/contacts2?page=' + ${model.page + 1}">Next</a>
-        </span>
-    </div>
-
     <p><a href="/contacts2/new">Add Contact</a></p>
 </div>
 </body>
