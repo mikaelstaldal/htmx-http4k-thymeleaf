@@ -5,7 +5,14 @@
     <td data-th-text="${contact.phone}">070-12345678</td>
     <td data-th-text="${contact.email}">joe@smith.org</td>
     <td><a data-th-href="${'/contacts2/' + contact.id + '/edit'}">Edit</a> <a
-            data-th-href="${'/contacts2/' + contact.id}">View</a></td>
+            data-th-href="${'/contacts2/' + contact.id}">View</a> <a
+            href="#"
+            data-th-attr="data-hx-delete=${'/contacts2/' + contact.id}"
+            data-hx-confirm="Are you sure you want to delete this contact?"
+            data-hx-swap="outerHTML"
+            data-hx-target="closest tr"
+    >Delete</a>
+    </td>
 </tr>
 <tr data-th-if="${model.contacts.size() eq model.pageSize}">
     <td colspan="5">

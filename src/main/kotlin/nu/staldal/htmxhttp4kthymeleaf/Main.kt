@@ -294,12 +294,16 @@ fun main() {
             val contact = contactsStore.find(id)
             if (contact != null) {
                 contactsStore.delete(contact).map {
-                    Response(SEE_OTHER).withFlash("Deleted contact").location(Uri.of("/contacts2"))
+                    if (request.header("HX-Trigger") == "delete-btn") {
+                        Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Deleted contact").location(Uri.of("/contacts2"))
+                    } else {
+                        Response(OK).header("Vary", "HX-Trigger").with(rawHtmlLens of "")
+                    }
                 }.mapFailure {
-                    Response(SEE_OTHER).withFlash("Unable to delete contact").location(Uri.of("/contacts2"))
+                    Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Unable to delete contact").location(Uri.of("/contacts2"))
                 }.get()
             } else {
-                Response(NOT_FOUND)
+                Response(NOT_FOUND).header("Vary", "HX-Trigger")
             }
         },
 

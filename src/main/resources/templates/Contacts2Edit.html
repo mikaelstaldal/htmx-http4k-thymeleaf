@@ -41,7 +41,8 @@
         </fieldset>
     </form>
 
-    <button data-hx-target="body"
+    <button id="delete-btn"
+            data-hx-target="body"
             data-hx-push-url="true"
             data-hx-confirm="Are you sure you want to delete this contact?"
             data-th-attr="data-hx-delete=${'/contacts2/' + model.contact.id}">Delete Contact</button>
