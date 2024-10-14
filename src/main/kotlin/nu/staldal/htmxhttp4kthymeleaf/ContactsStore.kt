@@ -80,6 +80,8 @@ class ContactsStore {
 
     fun find(id: String): StoredContact? = contacts[id]
 
+    fun count() = contacts.size
+
     fun add(contact: Contact): Result<StoredContact, ContactData> {
         val id = sha256(contact.email)
         return validate(contact, id).map {

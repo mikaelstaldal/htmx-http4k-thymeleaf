@@ -14,12 +14,12 @@
                data-hx-trigger="search, keyup delay:200ms changed"
                data-hx-target="tbody"
                data-hx-push-url="true"
-               data-hx-indicator="#spinner"
+               data-hx-indicator="next .htmx-indicator"
         />
-        <img id="spinner" class="htmx-indicator"
+        <img class="htmx-indicator"
              width="58" height="58"
              src="/img/spinning-circles.svg"
-        alt="Request In Flight..."/>
+             alt="Request In Flight..."/>
         <input type="submit" value="Search"/>
     </form>
 
@@ -35,7 +35,12 @@
         </thead>
         <tbody data-th-insert="~{Contacts2Rows}"></tbody>
     </table>
-    <p><a href="/contacts2/new">Add Contact</a></p>
+    <p><a href="/contacts2/new">Add Contact</a> (<span data-hx-get="/contacts2/count" data-hx-trigger="load">
+        <img class="htmx-indicator"
+             width="58" height="58"
+             alt="Request In Flight..."
+             src="/img/spinning-circles.svg"/>
+    </span> total Contacts)</p>
 </div>
 </body>
 </html>

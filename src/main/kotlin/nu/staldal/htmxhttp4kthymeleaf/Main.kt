@@ -212,6 +212,11 @@ fun main() {
                 Response(OK).removeFlash().header("Vary", "HX-Request")
                     .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
             }),
+        "/contacts2/count" bind GET to { request ->
+            Thread.sleep(1500) // demo lazy loading
+            val count = contactsStore.count()
+            Response(OK).with(rawHtmlLens of count.toString())
+        },
         "/contacts2/new" bind GET to { request ->
             Response(OK).with(htmlLens of Contacts2New(ContactData(), ContactData()))
         },
