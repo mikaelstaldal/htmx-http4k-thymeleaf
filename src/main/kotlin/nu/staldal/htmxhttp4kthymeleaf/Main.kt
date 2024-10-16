@@ -188,6 +188,7 @@ fun main() {
         },
 
         "/contacts2" bind GET to routes(
+            // TODO use other HX header instead
             Request.isHtmx bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
