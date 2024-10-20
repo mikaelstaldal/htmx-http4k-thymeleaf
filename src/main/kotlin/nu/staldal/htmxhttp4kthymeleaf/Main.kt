@@ -20,10 +20,14 @@ import org.http4k.filter.ServerFilters
 import org.http4k.filter.flash
 import org.http4k.filter.removeFlash
 import org.http4k.filter.withFlash
+import org.http4k.htmx.Id
+import org.http4k.lens.HX_TRIGGER
+import org.http4k.lens.Header
 import org.http4k.lens.location
 import org.http4k.lens.string
 import org.http4k.routing.ResourceLoader.Companion.Classpath
 import org.http4k.routing.Router.Companion.orElse
+import org.http4k.routing.asRouter
 import org.http4k.routing.bind
 import org.http4k.routing.htmxWebjars
 import org.http4k.routing.routes
@@ -38,6 +42,8 @@ private const val port = 8000
 val renderer = ThymeleafTemplates().CachingClasspath("templates")
 val htmlLens = Body.viewModel(renderer, TEXT_HTML).toLens()
 val rawHtmlLens = Body.string(TEXT_HTML).toLens()
+
+fun Request.Companion.htmxTrigger(id: Id) = { request: Request -> Header.HX_TRIGGER(request) == id }.asRouter()
 
 fun main() {
     val dataStore = DataStore()
@@ -188,8 +194,7 @@ fun main() {
         },
 
         "/contacts2" bind GET to routes(
-            // TODO use other HX header instead
-            Request.isHtmx bind { request ->
+            Request.htmxTrigger(Id.of("search")) bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
                 val contacts = if (!q.isNullOrEmpty()) {
@@ -198,7 +203,7 @@ fun main() {
                 } else {
                     contactsStore.all(page, 10)
                 }
-                Response(OK).header("Vary", "HX-Request")
+                Response(OK).header("Vary", "HX-Trigger")
                     .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
             },
             orElse bind { request ->
@@ -210,7 +215,7 @@ fun main() {
                 } else {
                     contactsStore.all(page, 10)
                 }
-                Response(OK).removeFlash().header("Vary", "HX-Request")
+                Response(OK).removeFlash().header("Vary", "HX-Trigger")
                     .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
             }),
         "/contacts2/count" bind GET to { request ->
@@ -304,7 +309,7 @@ fun main() {
                     Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Unable to delete contact").location(Uri.of("/contacts2"))
                 }.get()
             } else {
-                Response(NOT_FOUND).header("Vary", "HX-Trigger")
+                Response(NOT_FOUND)
             }
         },
 

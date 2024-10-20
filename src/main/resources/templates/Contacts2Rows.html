@@ -19,6 +19,7 @@
         <button
                 data-hx-target="closest tr"
                 data-hx-swap="outerHTML"
+                data-hx-select="tbody > tr"
                 data-th-attr="data-hx-get='/contacts2?' + ${(model.q != null)? ('q='+model.q+'&') : ''} + 'page=' + ${model.page + 1}"
         >Load more
         </button>
@@ -30,6 +31,7 @@
         <span data-hx-target="closest tr"
               data-hx-trigger="revealed"
               data-hx-swap="outerHTML"
+              data-hx-select="tbody > tr"
               data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Loading more...</span>
     </td>
 </tr>
