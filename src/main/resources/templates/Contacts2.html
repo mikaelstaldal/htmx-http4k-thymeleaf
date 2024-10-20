@@ -29,18 +29,25 @@
         <input type="submit" value="Search"/>
     </form>
 
-    <table>
-        <thead>
-        <tr>
-            <th>First</th>
-            <th>Last</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody data-th-insert="~{Contacts2Rows}"></tbody>
-    </table>
+    <form>
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>First</th>
+                <th>Last</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody data-th-insert="~{Contacts2Rows}"></tbody>
+        </table>
+        <button data-hx-delete="/contacts2"
+                data-hx-confirm="Are you sure tou want to delete there contacts?"
+                data-hx-target="body">Delete selected contacts
+        </button>
+    </form>
     <p><a href="/contacts2/new">Add Contact</a> (<span data-hx-get="/contacts2/count" data-hx-trigger="revealed">
         <img class="htmx-indicator"
              width="58" height="58"

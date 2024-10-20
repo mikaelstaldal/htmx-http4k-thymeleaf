@@ -218,6 +218,17 @@ fun main() {
                 Response(OK).removeFlash().header("Vary", "HX-Trigger")
                     .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
             }),
+        "/contacts2" bind DELETE to { request ->
+            request.queries("selected_contact_ids").filterNotNull().forEach { id ->
+                val contact = contactsStore.find(id)
+                if (contact != null) {
+                    contactsStore.delete(contact)
+                }
+            }
+            val contacts = contactsStore.all(0, 10)
+            Response(OK).withFlash("Deleted contacts")
+                .with(htmlLens of Contacts2(contacts, null, 0, pageSize = 10, flash = request.flash()))
+        },
         "/contacts2/count" bind GET to { request ->
             Thread.sleep(1500) // demo lazy loading
             val count = contactsStore.count()

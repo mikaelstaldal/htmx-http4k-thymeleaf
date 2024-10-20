@@ -1,5 +1,6 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2Rows"*/-->
 <tr data-th-each="contact : ${model.contacts}">
+    <td><input type="checkbox" name="selected_contact_ids" data-th-value="${contact.id}"></td>
     <td data-th-text="${contact.firstName}">Joe Smith</td>
     <td data-th-text="${contact.lastName}">Joe Smith</td>
     <td data-th-text="${contact.phone}">070-12345678</td>
