@@ -4,17 +4,14 @@
         Download Contact Archive
     </button>
     <div data-th-case="RUNNING" data-hx-get="/contacts2/archive" data-hx-trigger="load delay:500ms">
-        Creating Archive...
-        <div class="progress">
-            <div id="archive-progress"
-                 class="progress-bar"
-                 role="progressbar"
-                 data-th-aria-valuenow="${model.archiveProgress * 100}"
-                 data-th-style="'width:' + ${model.archiveProgress * 100} + '%'"></div>
-        </div>
+        <progress class="progress"
+                  max="100"
+                  data-th-value="${model.archiveProgress * 100}"
+                  data-th-text="'width:' + ${model.archiveProgress * 100} + '%'"></progress>
     </div>
     <div data-th-case="COMPLETE">
-        <a data-hx-boost="false" href="/contacts2/archive/file" _="on load click() me">Archive Downloading!  Click here if the download does not start.</a>
+        <a data-hx-boost="false" href="/contacts2/archive/file" _="on load click() me">Archive Downloading! Click
+            here if the download does not start.</a>
         <button data-hx-delete="/contacts2/archive">Clear Download</button>
     </div>
 </div>
