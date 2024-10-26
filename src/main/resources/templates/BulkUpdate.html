@@ -1,7 +1,7 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.BulkUpdate"*/-->
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::style}, ~{::content})}">
-<style data-th-fragment="style">
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
+<style data-th-fragment="extra">
     .htmx-settling tr.deactivate td {
         background: lightcoral;
     }

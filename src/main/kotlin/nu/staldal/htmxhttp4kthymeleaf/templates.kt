@@ -39,6 +39,7 @@ data class Contacts1Edit(val contact: StoredContact, val errors: Contact) : Html
 
 data class Contacts2(
     val contacts: Collection<StoredContact>, val q: String?, val page: Int, val pageSize: Int,
+    val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double,
     val flash: String? = null
 ) : HtmlViewModel
 data class Contacts2Rows(
@@ -48,3 +49,5 @@ data class Contacts2Rows(
 data class Contacts2New(val contact: Contact, val errors: Contact) : HtmlViewModel
 data class Contacts2View(val contact: StoredContact) : HtmlViewModel
 data class Contacts2Edit(val contact: StoredContact, val errors: Contact) : HtmlViewModel
+
+data class ArchiveUI(val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double) : HtmlViewModel

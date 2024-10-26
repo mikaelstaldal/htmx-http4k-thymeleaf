@@ -1,16 +1,13 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2"*/-->
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::style}, ~{::content})}">
-<style data-th-fragment="style">
-    tr.htmx-swapping {
-        opacity: 0;
-        transition: opacity 1s ease-out;
-    }
-</style>
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
+<link data-th-fragment="extra" rel="stylesheet" href="/contacts2.css">
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content" data-hx-boost="true">
     <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
+
+    <div data-th-insert="~{ArchiveUI}"></div>
 
     <form action="/contacts2" method="get" class="tool-bar">
         <label for="search">Search Contacts </label>

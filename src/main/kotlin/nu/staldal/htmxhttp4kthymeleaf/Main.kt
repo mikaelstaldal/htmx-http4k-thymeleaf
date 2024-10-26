@@ -4,6 +4,7 @@ import dev.forkhandles.result4k.get
 import dev.forkhandles.result4k.map
 import dev.forkhandles.result4k.mapFailure
 import org.http4k.core.Body
+import org.http4k.core.ContentType
 import org.http4k.core.ContentType.Companion.TEXT_HTML
 import org.http4k.core.Method.*
 import org.http4k.core.Request
@@ -23,6 +24,7 @@ import org.http4k.filter.withFlash
 import org.http4k.htmx.Id
 import org.http4k.lens.HX_TRIGGER
 import org.http4k.lens.Header
+import org.http4k.lens.contentType
 import org.http4k.lens.location
 import org.http4k.lens.string
 import org.http4k.routing.ResourceLoader.Companion.Classpath
@@ -215,8 +217,9 @@ fun main() {
                 } else {
                     contactsStore.all(page, 10)
                 }
+                val archiver = ContactsArchiver.get()
                 Response(OK).removeFlash().header("Vary", "HX-Trigger")
-                    .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, flash = request.flash()))
+                    .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, archiver.status(), archiver.progress(), flash = request.flash()))
             }),
         "/contacts2" bind DELETE to { request ->
             request.queries("selected_contact_ids").filterNotNull().forEach { id ->
@@ -226,8 +229,9 @@ fun main() {
                 }
             }
             val contacts = contactsStore.all(0, 10)
+            val archiver = ContactsArchiver.get()
             Response(OK).withFlash("Deleted contacts")
-                .with(htmlLens of Contacts2(contacts, null, 0, pageSize = 10, flash = request.flash()))
+                .with(htmlLens of Contacts2(contacts, null, 0, pageSize = 10, archiver.status(), archiver.progress(), flash = request.flash()))
         },
         "/contacts2/count" bind GET to { request ->
             Thread.sleep(1500) // demo lazy loading
@@ -253,6 +257,27 @@ fun main() {
                 it.email
             }.get()
             Response(OK).with(rawHtmlLens of responseText)
+        },
+        "/contacts2/archive" bind GET to { request ->
+            val archiver = ContactsArchiver.get()
+            Response(OK).with(htmlLens of ArchiveUI(archiver.status(), archiver.progress()))
+        },
+        "/contacts2/archive" bind POST to { request ->
+            val archiver = ContactsArchiver.get()
+            archiver.runIt()
+            Response(OK).with(htmlLens of ArchiveUI(archiver.status(), archiver.progress()))
+        },
+        "/contacts2/archive" bind DELETE to { request ->
+            val archiver = ContactsArchiver.get()
+            archiver.reset()
+            Response(OK).with(htmlLens of ArchiveUI(archiver.status(), archiver.progress()))
+        },
+        "/contacts2/archive/file" bind GET to { request ->
+            val archiver = ContactsArchiver.get()
+            Response(OK)
+                .header("Content-Disposition", """attachment; filename="${archiver.fileName()}"""")
+                .contentType(ContentType.APPLICATION_JSON)
+                .body(archiver.fileData())
         },
         "/contacts2/{id}" bind GET to { request ->
             val id = idLens(request)
