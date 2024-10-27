@@ -230,8 +230,9 @@ fun main() {
             }
             val contacts = contactsStore.all(0, 10)
             val archiver = ContactsArchiver.get()
-            Response(OK).withFlash("Deleted contacts")
-                .with(htmlLens of Contacts2(contacts, null, 0, pageSize = 10, archiver.status(), archiver.progress(), flash = request.flash()))
+            Response(OK).removeFlash()
+                .with(htmlLens of Contacts2(contacts, null, 0, pageSize = 10, archiver.status(), archiver.progress(),
+                    flash = "Deleted contacts"))
         },
         "/contacts2/count" bind GET to { request ->
             Thread.sleep(1500) // demo lazy loading
