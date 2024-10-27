@@ -1,7 +1,6 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2New"*/-->
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
-<link data-th-fragment="extra" rel="stylesheet" href="/contacts2.css">
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
@@ -35,12 +34,12 @@
                     <span class="error" data-th-text="${model.errors.phone}"/>
                 </p>
             </div>
-            <button>Save</button>
+            <button class="btn btn-primary">Save</button>
         </fieldset>
     </form>
 
     <p>
-        <a href="/contacts2">Back</a>
+        <a class="btn btn-light" href="/contacts2">Back</a>
     </p>
 </div>
 </body>

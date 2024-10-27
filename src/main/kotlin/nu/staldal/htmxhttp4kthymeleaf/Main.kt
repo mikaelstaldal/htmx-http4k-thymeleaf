@@ -11,6 +11,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.Uri
@@ -396,11 +397,15 @@ fun main() {
             if (contact != null) {
                 val newEmail = emailLens(request)
                 val responseText = contactsStore.validate(contact.copy(email = newEmail), id).map {
-                    ""
+                    null
                 }.mapFailure {
                     it.email
                 }.get()
-                Response(OK).with(rawHtmlLens of responseText)
+                if (responseText != null) {
+                    Response(OK).with(rawHtmlLens of responseText)
+                } else {
+                    Response(NO_CONTENT)
+                }
             } else {
                 Response(NOT_FOUND)
             }

@@ -1,20 +1,30 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2View"*/-->
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
-<link data-th-fragment="extra" rel="stylesheet" href="/contacts2.css">
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
     <h3 data-th-text="${model.contact.firstName + ' ' + model.contact.lastName}"/>
 
     <div>
-        <div data-th-text="${'Phone: ' + model.contact.phone}"/>
-        <div data-th-text="${'Email: ' + model.contact.email}"/>
+        <div class="row mb-1">
+            <label for="phone" class="col-sm-1 col-form-label">Phone</label>
+            <div class="col-sm-4">
+                <input class="form-control-plaintext" type="text" readonly name="phone" id="phone"
+                       data-th-value="${model.contact.phone}">
+            </div>
+        </div>
+        <div class="row mb-1">
+            <label for="email" class="col-sm-1 col-form-label">Email</label>
+            <div class="col-sm-4">
+                <input class="form-control-plaintext" type="text" readonly name="email" id="email"
+                       data-th-value="${model.contact.email}">
+            </div>
+        </div>
     </div>
-
     <p>
-        <a data-th-href="${'/contacts2/' + model.contact.id + '/edit'}">Edit</a>
-        <a href="/contacts2">Back</a>
+        <a class="btn btn-primary" data-th-href="${'/contacts2/' + model.contact.id + '/edit'}">Edit</a>
+        <a class="btn btn-light" href="/contacts2">Back</a>
     </p>
 </div>
 </body>

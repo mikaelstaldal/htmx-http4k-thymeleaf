@@ -1,17 +1,22 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2"*/-->
 <!DOCTYPE html>
 <html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
-<link data-th-fragment="extra" rel="stylesheet" href="/contacts2.css">
+<style data-th-fragment="extra">
+    tr.htmx-swapping {
+        opacity: 0;
+        transition: opacity 1s ease-out;
+    }
+</style>
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
     <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
 
-    <div>
-        <button id="sync-events-btn" hx-post="/contacts2/sync-events" hx-target="next span" hx-swap="outerHTML">
+    <div class="mb-2">
+        <button id="sync-events-btn" class="btn btn-secondary" hx-post="/contacts2/sync-events" hx-target="next span" hx-swap="outerHTML">
             Sync contacts from integration with events
         </button>
-        <button disabled
+        <button class="btn btn-light" disabled
                 _="on click send htmx:abort to #sync-events-btn
                    on htmx:beforeRequest from #sync-events-btn remove @disabled from me
                    on htmx:afterRequest from #sync-events-btn add @disabled to me">
@@ -19,11 +24,11 @@
         </button>
         <span></span>
     </div>
-    <div>
-        <button id="sync-oob-btn" hx-post="/contacts2/sync-oob" hx-target="next span" hx-swap="outerHTML">
+    <div class="mb-2">
+        <button id="sync-oob-btn" class="btn btn-secondary" hx-post="/contacts2/sync-oob" hx-target="next span" hx-swap="outerHTML">
             Sync contacts from integration with out-of-band swap
         </button>
-        <button disabled
+        <button class="btn btn-light" disabled
                 _="on click send htmx:abort to #sync-oob-btn
                    on htmx:beforeRequest from #sync-oob-btn remove @disabled from me
                    on htmx:afterRequest from #sync-oob-btn add @disabled to me">
@@ -34,7 +39,7 @@
 
     <div data-th-insert="~{Contacts2ArchiveUI}"></div>
 
-    <form action="/contacts2" method="get" class="tool-bar">
+    <form action="/contacts2" method="get">
         <label for="search">Search Contacts </label>
         <input id="search" type="search" name="q"
                data-th-value="${model.q}?: ''"
@@ -48,11 +53,11 @@
              width="58" height="58"
              src="/img/spinning-circles.svg"
              alt="Request In Flight..."/>
-        <input type="submit" value="Search"/>
+        <input class="btn btn-primary" type="submit" value="Search"/>
     </form>
 
-    <form>
-        <table>
+    <form class="mb-2">
+        <table class="table">
             <thead>
             <tr>
                 <th></th>
@@ -68,12 +73,13 @@
                    hx-trigger="contacts-updated from:body"
                    data-th-insert="~{Contacts2Rows}"></tbody>
         </table>
-        <button hx-delete="/contacts2"
+        <button class="btn btn-danger"
+                hx-delete="/contacts2"
                 hx-confirm="Are you sure you want to delete there contacts?"
                 hx-target="body">Delete selected contacts
         </button>
     </form>
-    <p><a href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count" hx-trigger="revealed">
+    <p><a class="btn btn-light" href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count" hx-trigger="revealed">
         <img class="htmx-indicator"
              width="58" height="58"
              alt="Request In Flight..."

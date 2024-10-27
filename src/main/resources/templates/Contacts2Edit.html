@@ -1,55 +1,63 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2Edit"*/-->
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
-<link data-th-fragment="extra" rel="stylesheet" href="/contacts2.css">
+<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{}, ~{::content})}">
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
-    <form data-th-action="${'/contacts2/' + model.contact.id + '/edit'}" method="post">
+    <form class="mb-2" data-th-action="${'/contacts2/' + model.contact.id + '/edit'}" method="post">
         <fieldset>
             <legend>Contact Values</legend>
-            <div class="table rows">
-                <p>
-                    <label for="email">Email</label>
-                    <input name="email" id="email" type="email"
+            <div class="row">
+                <label class="col-sm-1 col-form-label" for="email">Email</label>
+                <div class="col-sm-4">
+                    <input name="email" id="email" class="form-control" type="email"
                            data-th-attr="hx-get=${'/contacts2/' + model.contact.id + '/email'}"
                            hx-target="next .error"
                            hx-trigger="change, keyup delay:200ms changed"
                            placeholder="Email"
+                           _="on htmx.load add .is-invalid to me"
                            data-th-value="${model.contact.email}">
-                    <span class="error" data-th-text="${model.errors.email}"/>
-                </p>
-                <p>
-                    <label for="firstName">First Name</label>
-                    <input name="firstName" id="firstName" type="text" placeholder="First Name"
-                           data-th-value="${model.contact.firstName}">
-                    <span class="error" data-th-text="${model.errors.firstName}"/>
-                </p>
-                <p>
-                    <label for="lastName">Last Name</label>
-                    <input name="lastName" id="lastName" type="text" placeholder="Last Name"
-                           data-th-value="${model.contact.lastName}">
-                    <span class="error" data-th-text="${model.errors.lastName}"/>
-                </p>
-                <p>
-                    <label for="phone">Phone</label>
-                    <input name="phone" id="phone" type="text" placeholder="Phone"
-                           data-th-value="${model.contact.phone}">
-                    <span class="error" data-th-text="${model.errors.phone}"/>
-                </p>
+                </div>
+                <div class="error" data-th-text="${model.errors.email}"/>
             </div>
-            <button>Save</button>
+            <div class="row">
+                <label class="col-sm-1 col-form-label" for="firstName">First Name</label>
+                <div class="col-sm-4">
+                    <input name="firstName" id="firstName" class="form-control" type="text" placeholder="First Name"
+                           data-th-value="${model.contact.firstName}">
+                </div>
+                <div class="error" data-th-text="${model.errors.firstName}"/>
+            </div>
+            <div class="row">
+                <label class="col-sm-1 col-form-label" for="lastName">Last Name</label>
+                <div class="col-sm-4">
+                    <input name="lastName" id="lastName" class="form-control" type="text" placeholder="Last Name"
+                           data-th-value="${model.contact.lastName}">
+                </div>
+                <div class="error" data-th-text="${model.errors.lastName}"/>
+            </div>
+            <div class="row">
+                <label class="col-sm-1 col-form-label" for="phone">Phone</label>
+                <div class="col-sm-4">
+                    <input name="phone" id="phone" class="form-control" type="text" placeholder="Phone"
+                           data-th-value="${model.contact.phone}">
+                </div>
+                <div class="error" data-th-text="${model.errors.phone}"/>
+            </div>
+            <button class="btn btn-primary">Save</button>
         </fieldset>
     </form>
 
     <button id="delete-btn"
+            class="btn btn-danger mb-2"
             hx-target="body"
             hx-push-url="true"
             hx-confirm="Are you sure you want to delete this contact?"
-            data-th-attr="hx-delete=${'/contacts2/' + model.contact.id}">Delete Contact</button>
+            data-th-attr="hx-delete=${'/contacts2/' + model.contact.id}">Delete Contact
+    </button>
 
     <p>
-        <a href="/contacts2">Back</a>
+        <a class="btn btn-light" href="/contacts2">Back</a>
     </p>
 </div>
 </body>
