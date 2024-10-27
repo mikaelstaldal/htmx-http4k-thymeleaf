@@ -273,17 +273,17 @@ fun main() {
         },
         "/contacts2/archive" bind GET to { request ->
             val archiver = ContactsArchiver.get()
-            Response(OK).with(htmlLens of ArchiveUI(archiver.status(), archiver.progress()))
+            Response(OK).with(htmlLens of Contacts2ArchiveUI(archiver.status(), archiver.progress()))
         },
         "/contacts2/archive" bind POST to { request ->
             val archiver = ContactsArchiver.get()
             archiver.runIt()
-            Response(OK).with(htmlLens of ArchiveUI(archiver.status(), archiver.progress()))
+            Response(OK).with(htmlLens of Contacts2ArchiveUI(archiver.status(), archiver.progress()))
         },
         "/contacts2/archive" bind DELETE to { request ->
             val archiver = ContactsArchiver.get()
             archiver.reset()
-            Response(OK).with(htmlLens of ArchiveUI(archiver.status(), archiver.progress()))
+            Response(OK).with(htmlLens of Contacts2ArchiveUI(archiver.status(), archiver.progress()))
         },
         "/contacts2/archive/file" bind GET to { request ->
             val archiver = ContactsArchiver.get()

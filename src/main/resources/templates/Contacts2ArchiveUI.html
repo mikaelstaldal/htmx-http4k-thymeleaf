@@ -1,4 +1,4 @@
-<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.ArchiveUI"*/-->
+<!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2ArchiveUI"*/-->
 <div data-th-switch="${model.archiveStatus.name()}" id="archive-ui" data-hx-target="this" data-hx-swap="outerHTML">
     <button data-th-case="WAITING" data-hx-post="/contacts2/archive">
         Download Contact Archive
