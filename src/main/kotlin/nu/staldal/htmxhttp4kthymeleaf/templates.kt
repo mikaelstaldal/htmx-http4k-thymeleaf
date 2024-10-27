@@ -42,6 +42,7 @@ data class Contacts2(
     val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double,
     val flash: String? = null
 ) : HtmlViewModel
+
 data class Contacts2Rows(
     val contacts: Collection<StoredContact>, val q: String?, val page: Int, val pageSize: Int,
 ) : HtmlViewModel
@@ -52,4 +53,8 @@ data class Contacts2Edit(val contact: StoredContact, val errors: Contact) : Html
 
 data class Contacts2ArchiveUI(val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double) : HtmlViewModel
 
-data class Contacts2Sync(val isUpdated: Boolean) : HtmlViewModel
+data object Contacts2SyncEvent : HtmlViewModel
+data class Contacts2SyncOob(
+    val contacts: Collection<StoredContact>, val q: String?, val page: Int, val pageSize: Int,
+) : HtmlViewModel
+data object Contacts2SyncNotUpdated : HtmlViewModel

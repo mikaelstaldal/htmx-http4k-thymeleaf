@@ -48,6 +48,8 @@ val rawHtmlLens = Body.string(TEXT_HTML).toLens()
 
 fun Request.Companion.htmxTrigger(id: Id) = { request: Request -> Header.HX_TRIGGER(request) == id }.asRouter()
 
+private const val PAGE_SIZE = 10
+
 fun main() {
     val dataStore = DataStore()
     val contactsStore = ContactsStore()
@@ -84,10 +86,14 @@ fun main() {
         "/click-to-load" bind GET to routes(
             Request.isHtmx bind { request ->
                 val page = pageLens(request)
-                Response(OK).with(htmlLens of AgentsList(dataStore.agents.drop(10 * page).take(10).toList(), page + 1))
+                Response(OK).with(
+                    htmlLens of AgentsList(
+                        dataStore.agents.drop(PAGE_SIZE * page).take(PAGE_SIZE).toList(), page + 1
+                    )
+                )
             },
             orElse bind { request ->
-                Response(OK).with(htmlLens of ClickToLoad(dataStore.agents.take(10).toList(), 1))
+                Response(OK).with(htmlLens of ClickToLoad(dataStore.agents.take(PAGE_SIZE).toList(), 1))
             }
         ),
 
@@ -96,13 +102,13 @@ fun main() {
                 val page = pageLens(request)
                 Response(OK).with(
                     htmlLens of AgentsListInfinite(
-                        dataStore.agents.drop(10 * page).take(10).toList(),
+                        dataStore.agents.drop(PAGE_SIZE * page).take(PAGE_SIZE).toList(),
                         page + 1
                     )
                 )
             },
             orElse bind { request ->
-                Response(OK).with(htmlLens of InfiniteScroll(dataStore.agents.take(10).toList(), 1))
+                Response(OK).with(htmlLens of InfiniteScroll(dataStore.agents.take(PAGE_SIZE).toList(), 1))
             }
         ),
 
@@ -127,12 +133,12 @@ fun main() {
             val q = qLens(request)
             val page = pageLens(request)
             val contacts = if (q != null) {
-                contactsStore.search(q, page, 10)
+                contactsStore.search(q, page, PAGE_SIZE)
             } else {
-                contactsStore.all(page, 10)
+                contactsStore.all(page, PAGE_SIZE)
             }
             Response(OK).removeFlash()
-                .with(htmlLens of Contacts1(contacts, q, page, pageSize = 10, flash = request.flash()))
+                .with(htmlLens of Contacts1(contacts, q, page, pageSize = PAGE_SIZE, flash = request.flash()))
         },
         "/contacts1/new" bind GET to { request ->
             Response(OK).with(htmlLens of Contacts1New(ContactData(), ContactData()))
@@ -202,36 +208,46 @@ fun main() {
                 val page = pageLens(request)
                 val contacts = if (!q.isNullOrEmpty()) {
                     if (page == 0) Thread.sleep(1000) // demo request indicator
-                    contactsStore.search(q, page, 10)
+                    contactsStore.search(q, page, PAGE_SIZE)
                 } else {
-                    contactsStore.all(page, 10)
+                    contactsStore.all(page, PAGE_SIZE)
                 }
                 Response(OK).header("Vary", "HX-Trigger").header("Vary", "HX-Request")
-                    .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
+                    .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = PAGE_SIZE))
             },
             Request.isHtmx bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
                 val contacts = if (!q.isNullOrEmpty()) {
-                    contactsStore.search(q, page, 10)
+                    contactsStore.search(q, page, PAGE_SIZE)
                 } else {
-                    contactsStore.all(page, 10)
+                    contactsStore.all(page, PAGE_SIZE)
                 }
                 Response(OK).header("Vary", "HX-Trigger").header("Vary", "HX-Request")
-                    .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
+                    .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = PAGE_SIZE))
             },
             orElse bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
                 val contacts = if (!q.isNullOrEmpty()) {
                     if (page == 0) Thread.sleep(1000) // demo request indicator
-                    contactsStore.search(q, page, 10)
+                    contactsStore.search(q, page, PAGE_SIZE)
                 } else {
-                    contactsStore.all(page, 10)
+                    contactsStore.all(page, PAGE_SIZE)
                 }
                 val archiver = ContactsArchiver.get()
                 Response(OK).removeFlash().header("Vary", "HX-Trigger").header("Vary", "HX-Request")
-                    .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, archiver.status(), archiver.progress(), flash = request.flash()))
+                    .with(
+                        htmlLens of Contacts2(
+                            contacts,
+                            q,
+                            page,
+                            pageSize = PAGE_SIZE,
+                            archiver.status(),
+                            archiver.progress(),
+                            flash = request.flash()
+                        )
+                    )
             }),
         "/contacts2" bind DELETE to { request ->
             request.queries("selected_contact_ids").filterNotNull().forEach { id ->
@@ -240,11 +256,15 @@ fun main() {
                     contactsStore.delete(contact)
                 }
             }
-            val contacts = contactsStore.all(0, 10)
+            val contacts = contactsStore.all(0, PAGE_SIZE)
             val archiver = ContactsArchiver.get()
             Response(OK).removeFlash()
-                .with(htmlLens of Contacts2(contacts, null, 0, pageSize = 10, archiver.status(), archiver.progress(),
-                    flash = "Deleted contacts"))
+                .with(
+                    htmlLens of Contacts2(
+                        contacts, null, 0, pageSize = PAGE_SIZE, archiver.status(), archiver.progress(),
+                        flash = "Deleted contacts"
+                    )
+                )
         },
         "/contacts2/count" bind GET to { request ->
             Thread.sleep(1500) // demo lazy loading
@@ -292,19 +312,45 @@ fun main() {
                 .contentType(ContentType.APPLICATION_JSON)
                 .body(archiver.fileData())
         },
-        "/contacts2/sync" bind POST to { request ->
+        "/contacts2/sync-events" bind POST to { request ->
             Thread.sleep(2000) // demo cancel request
             val isUpdated = Random.Default.nextBoolean()
             if (isUpdated) {
-                contactsStore.add(ContactData(
-                    firstName = "Samuel",
-                    lastName = "Syncing",
-                    phone = "00000000",
-                    email = "a${System.currentTimeMillis()}@sync.com",
-                ))
-                Response(OK).header("HX-Trigger", "contacts-updated").with(htmlLens of Contacts2Sync(isUpdated = true))
+                contactsStore.add(
+                    ContactData(
+                        firstName = "Evan",
+                        lastName = "Events",
+                        phone = "00000000",
+                        email = "a${System.currentTimeMillis()}@sync.com",
+                    )
+                )
+                Response(OK).header("HX-Trigger", "contacts-updated").with(htmlLens of Contacts2SyncEvent)
             } else {
-                Response(OK).with(htmlLens of Contacts2Sync(isUpdated = false))
+                Response(OK).with(htmlLens of Contacts2SyncNotUpdated)
+            }
+        },
+        "/contacts2/sync-oob" bind POST to { request ->
+            Thread.sleep(2000) // demo cancel request
+            val isUpdated = Random.Default.nextBoolean()
+            if (isUpdated) {
+                contactsStore.add(
+                    ContactData(
+                        firstName = "Otto",
+                        lastName = "OOB",
+                        phone = "00000000",
+                        email = "a${System.currentTimeMillis()}@sync.com",
+                    )
+                )
+                Response(OK).with(
+                    htmlLens of Contacts2SyncOob(
+                        contactsStore.all(page = 0, limit = PAGE_SIZE),
+                        q = null,
+                        page = 0,
+                        pageSize = PAGE_SIZE
+                    )
+                )
+            } else {
+                Response(OK).with(htmlLens of Contacts2SyncNotUpdated)
             }
         },
         "/contacts2/{id}" bind GET to { request ->
@@ -365,12 +411,14 @@ fun main() {
             if (contact != null) {
                 contactsStore.delete(contact).map {
                     if (request.header("HX-Trigger") == "delete-btn") {
-                        Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Deleted contact").location(Uri.of("/contacts2"))
+                        Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Deleted contact")
+                            .location(Uri.of("/contacts2"))
                     } else {
                         Response(OK).header("Vary", "HX-Trigger").with(rawHtmlLens of "")
                     }
                 }.mapFailure {
-                    Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Unable to delete contact").location(Uri.of("/contacts2"))
+                    Response(SEE_OTHER).header("Vary", "HX-Trigger").withFlash("Unable to delete contact")
+                        .location(Uri.of("/contacts2"))
                 }.get()
             } else {
                 Response(NOT_FOUND)

@@ -8,13 +8,25 @@
     <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
 
     <div>
-        <button id="sync-btn" data-hx-post="/contacts2/sync" data-hx-target="next span" data-hx-swap="outerHTML">
-            Sync contacts from integration
+        <button id="sync-events-btn" data-hx-post="/contacts2/sync-events" data-hx-target="next span" data-hx-swap="outerHTML">
+            Sync contacts from integration with events
         </button>
         <button disabled
-                _="on click send htmx:abort to #sync-btn
-                   on htmx:beforeRequest from #sync-btn remove @disabled from me
-                   on htmx:afterRequest from #sync-btn add @disabled to me">
+                _="on click send htmx:abort to #sync-events-btn
+                   on htmx:beforeRequest from #sync-events-btn remove @disabled from me
+                   on htmx:afterRequest from #sync-events-btn add @disabled to me">
+            Cancel sync
+        </button>
+        <span></span>
+    </div>
+    <div>
+        <button id="sync-oob-btn" data-hx-post="/contacts2/sync-oob" data-hx-target="next span" data-hx-swap="outerHTML">
+            Sync contacts from integration with out-of-band swap
+        </button>
+        <button disabled
+                _="on click send htmx:abort to #sync-oob-btn
+                   on htmx:beforeRequest from #sync-oob-btn remove @disabled from me
+                   on htmx:afterRequest from #sync-oob-btn add @disabled to me">
             Cancel sync
         </button>
         <span></span>
@@ -51,7 +63,8 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody data-hx-get="/contacts2"
+            <tbody id="contacts-tbody"
+                   data-hx-get="/contacts2"
                    data-hx-trigger="contacts-updated from:body"
                    data-th-insert="~{Contacts2Rows}"></tbody>
         </table>
