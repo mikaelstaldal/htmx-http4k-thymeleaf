@@ -17,10 +17,9 @@
 </tr>
 <tr data-th-if="${model.contacts.size() eq model.pageSize}">
     <td colspan="5">
-        <button
+        <button id="next-page"
                 data-hx-target="closest tr"
                 data-hx-swap="outerHTML"
-                data-hx-select="tbody > tr"
                 data-th-attr="data-hx-get='/contacts2?' + ${(model.q != null)? ('q='+model.q+'&') : ''} + 'page=' + ${model.page + 1}"
         >Load more
         </button>
@@ -29,10 +28,10 @@
 <!--/* infinite scroll
 <tr data-th-if="${model.contacts.size() eq model.pageSize}">
     <td colspan="5">
-        <span data-hx-target="closest tr"
+        <span id="next-page"
+              data-hx-target="closest tr"
               data-hx-trigger="revealed"
               data-hx-swap="outerHTML"
-              data-hx-select="tbody > tr"
               data-th-attr="data-hx-get='/contacts2?page=' + ${model.page + 1}">Loading more...</span>
     </td>
 </tr>

@@ -208,6 +208,17 @@ fun main() {
                 Response(OK).header("Vary", "HX-Trigger")
                     .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
             },
+            Request.htmxTrigger(Id.of("next-page")) bind { request ->
+                val q = qLens(request)
+                val page = pageLens(request)
+                val contacts = if (!q.isNullOrEmpty()) {
+                    contactsStore.search(q, page, 10)
+                } else {
+                    contactsStore.all(page, 10)
+                }
+                Response(OK).header("Vary", "HX-Trigger")
+                    .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
+            },
             orElse bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
