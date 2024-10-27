@@ -10,7 +10,7 @@
                   data-th-text="'width:' + ${model.archiveProgress * 100} + '%'"></progress>
     </div>
     <div data-th-case="COMPLETE">
-        <a data-hx-boost="false" href="/contacts2/archive/file" _="on load click() me">Archive Downloading! Click
+        <a href="/contacts2/archive/file" _="on load click() me">Archive Downloading! Click
             here if the download does not start.</a>
         <button data-hx-delete="/contacts2/archive">Clear Download</button>
     </div>

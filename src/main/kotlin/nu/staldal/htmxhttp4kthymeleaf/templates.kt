@@ -51,3 +51,5 @@ data class Contacts2View(val contact: StoredContact) : HtmlViewModel
 data class Contacts2Edit(val contact: StoredContact, val errors: Contact) : HtmlViewModel
 
 data class ArchiveUI(val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double) : HtmlViewModel
+
+data class Contacts2Sync(val isUpdated: Boolean) : HtmlViewModel

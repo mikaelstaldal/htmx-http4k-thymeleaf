@@ -38,6 +38,7 @@ import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import org.http4k.template.ThymeleafTemplates
 import org.http4k.template.viewModel
+import kotlin.random.Random
 
 private const val port = 8000
 
@@ -205,19 +206,18 @@ fun main() {
                 } else {
                     contactsStore.all(page, 10)
                 }
-                Response(OK).header("Vary", "HX-Trigger")
+                Response(OK).header("Vary", "HX-Trigger").header("Vary", "HX-Request")
                     .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
             },
-            Request.htmxTrigger(Id.of("next-page")) bind { request ->
+            Request.isHtmx bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
-                if (page > 0) Thread.sleep(1000) // demo cancel request
                 val contacts = if (!q.isNullOrEmpty()) {
                     contactsStore.search(q, page, 10)
                 } else {
                     contactsStore.all(page, 10)
                 }
-                Response(OK).header("Vary", "HX-Trigger")
+                Response(OK).header("Vary", "HX-Trigger").header("Vary", "HX-Request")
                     .with(htmlLens of Contacts2Rows(contacts, q, page, pageSize = 10))
             },
             orElse bind { request ->
@@ -230,7 +230,7 @@ fun main() {
                     contactsStore.all(page, 10)
                 }
                 val archiver = ContactsArchiver.get()
-                Response(OK).removeFlash().header("Vary", "HX-Trigger")
+                Response(OK).removeFlash().header("Vary", "HX-Trigger").header("Vary", "HX-Request")
                     .with(htmlLens of Contacts2(contacts, q, page, pageSize = 10, archiver.status(), archiver.progress(), flash = request.flash()))
             }),
         "/contacts2" bind DELETE to { request ->
@@ -291,6 +291,21 @@ fun main() {
                 .header("Content-Disposition", """attachment; filename="${archiver.fileName()}"""")
                 .contentType(ContentType.APPLICATION_JSON)
                 .body(archiver.fileData())
+        },
+        "/contacts2/sync" bind POST to { request ->
+            Thread.sleep(2000) // demo cancel request
+            val isUpdated = Random.Default.nextBoolean()
+            if (isUpdated) {
+                contactsStore.add(ContactData(
+                    firstName = "Samuel",
+                    lastName = "Syncing",
+                    phone = "00000000",
+                    email = "a${System.currentTimeMillis()}@sync.com",
+                ))
+                Response(OK).header("HX-Trigger", "contacts-updated").with(htmlLens of Contacts2Sync(isUpdated = true))
+            } else {
+                Response(OK).with(htmlLens of Contacts2Sync(isUpdated = false))
+            }
         },
         "/contacts2/{id}" bind GET to { request ->
             val id = idLens(request)

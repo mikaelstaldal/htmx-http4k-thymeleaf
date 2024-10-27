@@ -4,8 +4,21 @@
 <link data-th-fragment="extra" rel="stylesheet" href="/contacts2.css">
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
-<div data-th-fragment="content" data-hx-boost="true">
+<div data-th-fragment="content">
     <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
+
+    <div>
+        <button id="sync-btn" data-hx-post="/contacts2/sync" data-hx-target="next span" data-hx-swap="outerHTML">
+            Sync contacts from integration
+        </button>
+        <button disabled
+                _="on click send htmx:abort to #sync-btn
+               on htmx:beforeRequest from #sync-btn remove @disabled from me
+               on htmx:afterRequest from #sync-btn add @disabled to me">
+            Cancel sync
+        </button>
+        <span></span>
+    </div>
 
     <div data-th-insert="~{ArchiveUI}"></div>
 
@@ -38,7 +51,9 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody data-th-insert="~{Contacts2Rows}"></tbody>
+            <tbody data-hx-get="/contacts2"
+                   data-hx-trigger="contacts-updated from:body"
+                   data-th-insert="~{Contacts2Rows}"></tbody>
         </table>
         <button data-hx-delete="/contacts2"
                 data-hx-confirm="Are you sure you want to delete there contacts?"

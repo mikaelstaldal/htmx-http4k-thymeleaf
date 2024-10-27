@@ -23,12 +23,6 @@
                 data-th-attr="data-hx-get='/contacts2?' + ${(model.q != null)? ('q='+model.q+'&') : ''} + 'page=' + ${model.page + 1}"
         >Load more
         </button>
-        <button disabled
-                _="on click send htmx:abort to #next-page
-                   on htmx:beforeRequest from #next-page remove @disabled from me
-                   on htmx:afterRequest from #next-page add @disabled to me">
-            Cancel loading
-        </button>
     </td>
 </tr>
 <!--/* infinite scroll
