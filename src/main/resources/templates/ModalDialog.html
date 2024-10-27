@@ -3,7 +3,7 @@
 <body>
 <h2 data-th-fragment="title">Modal dialog using Bootstrap</h2>
 <div data-th-fragment="content">
-    <button class="btn btn-primary" data-hx-get="/modal" data-hx-target="#modals-here" data-hx-trigger="click" _="
+    <button class="btn btn-primary" hx-get="/modal" hx-target="#modals-here" hx-trigger="click" _="
                     on htmx:afterOnLoad
                     wait 10ms
                     then add .show to #modal

@@ -1,6 +1,6 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.AgentsListInfinite"*/-->
 <tr data-th-each="agent,iterStat : ${model.agents}"
-    data-th-attr="data-hx-get=${iterStat.last}? ${'?page=' + model.page},data-hx-trigger=${iterStat.last}? 'revealed',data-hx-swap=${iterStat.last}? 'afterend'"
+    data-th-attr="hx-get=${iterStat.last}? ${'?page=' + model.page},hx-trigger=${iterStat.last}? 'revealed',hx-swap=${iterStat.last}? 'afterend'"
 >
     <td data-th-text="${agent.name}">Agent Smith</td>
     <td data-th-text="${agent.email}">void10@null.org</td>

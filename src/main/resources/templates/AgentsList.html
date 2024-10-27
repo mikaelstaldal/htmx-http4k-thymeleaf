@@ -6,7 +6,7 @@
 </tr>
 <tr id="replaceMe">
     <td colspan="3">
-        <button class="btn btn-light" data-th-attr="data-hx-get=${'?page=' + model.page}" data-hx-target="#replaceMe" data-hx-swap="outerHTML">
+        <button class="btn btn-light" data-th-attr="hx-get=${'?page=' + model.page}" hx-target="#replaceMe" hx-swap="outerHTML">
             Load More Agents...
         </button>
     </td>

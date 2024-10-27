@@ -8,7 +8,7 @@
     <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
 
     <div>
-        <button id="sync-events-btn" data-hx-post="/contacts2/sync-events" data-hx-target="next span" data-hx-swap="outerHTML">
+        <button id="sync-events-btn" hx-post="/contacts2/sync-events" hx-target="next span" hx-swap="outerHTML">
             Sync contacts from integration with events
         </button>
         <button disabled
@@ -20,7 +20,7 @@
         <span></span>
     </div>
     <div>
-        <button id="sync-oob-btn" data-hx-post="/contacts2/sync-oob" data-hx-target="next span" data-hx-swap="outerHTML">
+        <button id="sync-oob-btn" hx-post="/contacts2/sync-oob" hx-target="next span" hx-swap="outerHTML">
             Sync contacts from integration with out-of-band swap
         </button>
         <button disabled
@@ -38,11 +38,11 @@
         <label for="search">Search Contacts </label>
         <input id="search" type="search" name="q"
                data-th-value="${model.q}?: ''"
-               data-hx-get="/contacts2"
-               data-hx-trigger="search, keyup delay:200ms changed"
-               data-hx-target="tbody"
-               data-hx-push-url="true"
-               data-hx-indicator="next .htmx-indicator"
+               hx-get="/contacts2"
+               hx-trigger="search, keyup delay:200ms changed"
+               hx-target="tbody"
+               hx-push-url="true"
+               hx-indicator="next .htmx-indicator"
         />
         <img class="htmx-indicator"
              width="58" height="58"
@@ -64,16 +64,16 @@
             </tr>
             </thead>
             <tbody id="contacts-tbody"
-                   data-hx-get="/contacts2"
-                   data-hx-trigger="contacts-updated from:body"
+                   hx-get="/contacts2"
+                   hx-trigger="contacts-updated from:body"
                    data-th-insert="~{Contacts2Rows}"></tbody>
         </table>
-        <button data-hx-delete="/contacts2"
-                data-hx-confirm="Are you sure you want to delete there contacts?"
-                data-hx-target="body">Delete selected contacts
+        <button hx-delete="/contacts2"
+                hx-confirm="Are you sure you want to delete there contacts?"
+                hx-target="body">Delete selected contacts
         </button>
     </form>
-    <p><a href="/contacts2/new">Add Contact</a> (<span data-hx-get="/contacts2/count" data-hx-trigger="revealed">
+    <p><a href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count" hx-trigger="revealed">
         <img class="htmx-indicator"
              width="58" height="58"
              alt="Request In Flight..."

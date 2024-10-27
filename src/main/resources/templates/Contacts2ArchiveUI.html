@@ -1,9 +1,9 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2ArchiveUI"*/-->
-<div data-th-switch="${model.archiveStatus.name()}" id="archive-ui" data-hx-target="this" data-hx-swap="outerHTML">
-    <button data-th-case="WAITING" data-hx-post="/contacts2/archive">
+<div data-th-switch="${model.archiveStatus.name()}" id="archive-ui" hx-target="this" hx-swap="outerHTML">
+    <button data-th-case="WAITING" hx-post="/contacts2/archive">
         Download Contact Archive
     </button>
-    <div data-th-case="RUNNING" data-hx-get="/contacts2/archive" data-hx-trigger="load delay:500ms">
+    <div data-th-case="RUNNING" hx-get="/contacts2/archive" hx-trigger="load delay:500ms">
         <progress class="progress"
                   max="100"
                   data-th-value="${model.archiveProgress * 100}"
@@ -12,6 +12,6 @@
     <div data-th-case="COMPLETE">
         <a href="/contacts2/archive/file" _="on load click() me">Archive Downloading! Click
             here if the download does not start.</a>
-        <button data-hx-delete="/contacts2/archive">Clear Download</button>
+        <button hx-delete="/contacts2/archive">Clear Download</button>
     </div>
 </div>

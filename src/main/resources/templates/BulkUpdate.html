@@ -17,9 +17,9 @@
 <body>
 <h2 data-th-fragment="title">Bulk update</h2>
 <div data-th-fragment="content">
-    <div data-hx-include="#checked-contacts" data-hx-target="#tbody">
-        <button class="btn btn-primary me-1" data-hx-put="/contacts/activate">Activate</button>
-        <button class="btn btn-primary" data-hx-put="/contacts/deactivate">Deactivate</button>
+    <div hx-include="#checked-contacts" hx-target="#tbody">
+        <button class="btn btn-primary me-1" hx-put="/contacts/activate">Activate</button>
+        <button class="btn btn-primary" hx-put="/contacts/deactivate">Deactivate</button>
     </div>
     <form id="checked-contacts">
         <table class="table">

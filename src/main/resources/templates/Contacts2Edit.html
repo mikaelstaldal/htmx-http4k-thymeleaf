@@ -12,9 +12,9 @@
                 <p>
                     <label for="email">Email</label>
                     <input name="email" id="email" type="email"
-                           data-th-attr="data-hx-get=${'/contacts2/' + model.contact.id + '/email'}"
-                           data-hx-target="next .error"
-                           data-hx-trigger="change, keyup delay:200ms changed"
+                           data-th-attr="hx-get=${'/contacts2/' + model.contact.id + '/email'}"
+                           hx-target="next .error"
+                           hx-trigger="change, keyup delay:200ms changed"
                            placeholder="Email"
                            data-th-value="${model.contact.email}">
                     <span class="error" data-th-text="${model.errors.email}"/>
@@ -43,10 +43,10 @@
     </form>
 
     <button id="delete-btn"
-            data-hx-target="body"
-            data-hx-push-url="true"
-            data-hx-confirm="Are you sure you want to delete this contact?"
-            data-th-attr="data-hx-delete=${'/contacts2/' + model.contact.id}">Delete Contact</button>
+            hx-target="body"
+            hx-push-url="true"
+            hx-confirm="Are you sure you want to delete this contact?"
+            data-th-attr="hx-delete=${'/contacts2/' + model.contact.id}">Delete Contact</button>
 
     <p>
         <a href="/contacts2">Back</a>

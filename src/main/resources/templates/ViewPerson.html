@@ -1,5 +1,5 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.ViewPerson"*/-->
-<div data-hx-target="this" data-hx-swap="outerHTML">
+<div hx-target="this" hx-swap="outerHTML">
     <div class="row mb-1">
         <label class="col-sm-1 col-form-label">First Name</label>
         <div class="col-sm-4">
@@ -21,5 +21,5 @@
                    data-th-value="${model.email}">
         </div>
     </div>
-    <button class="btn btn-primary" data-hx-get="/person/edit">Click To Edit</button>
+    <button class="btn btn-primary" hx-get="/person/edit">Click To Edit</button>
 </div>

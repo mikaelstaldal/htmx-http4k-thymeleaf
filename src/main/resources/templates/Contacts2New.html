@@ -12,9 +12,9 @@
                 <p>
                     <label for="email">Email</label>
                     <input name="email" id="email" type="email"
-                           data-th-attr="data-hx-get=${'/contacts2/email'}"
-                           data-hx-target="next .error"
-                           data-hx-trigger="change, keyup delay:200ms changed"
+                           data-th-attr="hx-get=${'/contacts2/email'}"
+                           hx-target="next .error"
+                           hx-trigger="change, keyup delay:200ms changed"
                            placeholder="Email"
                            data-th-value="${model.contact.email}">
                     <span class="error" data-th-text="${model.errors.email}"/>
