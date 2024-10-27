@@ -211,6 +211,7 @@ fun main() {
             Request.htmxTrigger(Id.of("next-page")) bind { request ->
                 val q = qLens(request)
                 val page = pageLens(request)
+                if (page > 0) Thread.sleep(1000) // demo cancel request
                 val contacts = if (!q.isNullOrEmpty()) {
                     contactsStore.search(q, page, 10)
                 } else {

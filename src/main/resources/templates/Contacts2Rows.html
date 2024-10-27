@@ -16,18 +16,24 @@
     </td>
 </tr>
 <tr data-th-if="${model.contacts.size() eq model.pageSize}">
-    <td colspan="5">
+    <td colspan="6">
         <button id="next-page"
                 data-hx-target="closest tr"
                 data-hx-swap="outerHTML"
                 data-th-attr="data-hx-get='/contacts2?' + ${(model.q != null)? ('q='+model.q+'&') : ''} + 'page=' + ${model.page + 1}"
         >Load more
         </button>
+        <button disabled
+                _="on click send htmx:abort to #next-page
+                   on htmx:beforeRequest from #next-page remove @disabled from me
+                   on htmx:afterRequest from #next-page add @disabled to me">
+            Cancel loading
+        </button>
     </td>
 </tr>
 <!--/* infinite scroll
 <tr data-th-if="${model.contacts.size() eq model.pageSize}">
-    <td colspan="5">
+    <td colspan="6">
         <span id="next-page"
               data-hx-target="closest tr"
               data-hx-trigger="revealed"
