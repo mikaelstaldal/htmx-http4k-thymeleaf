@@ -48,6 +48,8 @@
                hx-target="tbody"
                hx-push-url="true"
                hx-indicator="next .htmx-indicator"
+               _="on keydown[altKey and code is 'KeyS'] from the window
+                  focus() me"
         />
         <img class="htmx-indicator"
              width="58" height="58"
