@@ -1,21 +1,13 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2"*/-->
 <!DOCTYPE html>
 <html lang="en" data-th-replace="~{layout2.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
-<div data-th-fragment="extra">
-    <style>
-        tr.htmx-swapping {
-            opacity: 0;
-            transition: opacity 1s ease-out;
-        }
-    </style>
-    <script>
-      function sweetConfirm(elt, config) {
-        Swal.fire(config).then((result) => {
-          if (result.isConfirmed) elt.dispatchEvent(new Event('confirmed'));
-        });
-      }
-    </script>
-</div>
+<script data-th-fragment="extra">
+  function sweetConfirm(elt, config) {
+    Swal.fire(config).then((result) => {
+      if (result.isConfirmed) elt.dispatchEvent(new Event('confirmed'));
+    });
+  }
+</script>
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
@@ -71,7 +63,8 @@
 
     <form id="contacts-form" class="mb-2">
         <div id="bulk-actions" style="display: none">
-            <slot></slot> contacts selected
+            <slot></slot>
+            contacts selected
             <button class="btn btn-danger"
                     hx-delete="/contacts2"
                     hx-target="body"
@@ -87,11 +80,12 @@
             >Delete selected contacts
             </button>
             <button class="btn btn-light"
-                _="on click
+                    _="on click
                    halt the event
                    get the &lt;input[type=checkbox]/&gt; in the &lt;tbody/&gt; in the closest &lt;form/&gt;
                    set its checked to false
-                   hide #bulk-actions">Cancel</button>
+                   hide #bulk-actions">Cancel
+            </button>
         </div>
         <table class="table">
             <thead>
