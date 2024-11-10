@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-th-fragment="layout (title, style, content)">
+<html lang="en" data-th-fragment="layout (title, extra, content)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/bootstrap.css">
-    <style data-th-replace="${style}">
-    </style>
+    <template data-th-replace="${extra}"></template>
     <title>htmx with http4k and Thymeleaf templates</title>
 </head>
 <body>
