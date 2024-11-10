@@ -1,6 +1,19 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2Rows"*/-->
 <tr data-th-each="contact : ${model.contacts}">
-    <td><input type="checkbox" name="selected_contact_ids" data-th-value="${contact.id}"></td>
+    <td><input type="checkbox"
+               name="selected_contact_ids"
+               data-th-value="${contact.id}"
+               _="on change
+                  get the &lt;input[type=checkbox]/&gt; in the closest &lt;tbody/&gt;
+                  set count to its checked.filter( \ c -> c).length
+                  if count > 0 then
+                    set innerHTML of &lt;slot/&gt; in #bulk-actions to count
+                    show #bulk-actions
+                  else
+                    hide #bulk-actions
+                  end
+"
+    ></td>
     <td data-th-text="${contact.firstName}">Joe Smith</td>
     <td data-th-text="${contact.lastName}">Joe Smith</td>
     <td data-th-text="${contact.phone}">070-12345678</td>

@@ -86,19 +86,29 @@
                    hx-trigger="contacts-updated from:body"
                    data-th-insert="~{Contacts2Rows}"></tbody>
         </table>
-        <button class="btn btn-danger"
-                hx-delete="/contacts2"
-                hx-target="body"
-                hx-trigger="confirmed"
-                _="on click(target)
-                     halt the event
-                     call sweetConfirm(target, {
-                        title: 'Delete these contacts?',
-                        showCancelButton: true,
-                        confirmButtonText: 'Delete'
-                     })"
-        >Delete selected contacts
-        </button>
+        <div id="bulk-actions" style="display: none">
+            <slot></slot> contacts selected
+            <button class="btn btn-danger"
+                    hx-delete="/contacts2"
+                    hx-target="body"
+                    hx-trigger="confirmed"
+                    _="on click(target)
+                       halt the event
+                       set count to innerHTML of previous &lt;slot/&gt;
+                       call sweetConfirm(target, {
+                           title: `Delete ${count} contacts?`,
+                           showCancelButton: true,
+                           confirmButtonText: 'Delete'
+                       })"
+            >Delete selected contacts
+            </button>
+            <button class="btn btn-light"
+                _="on click
+                   halt the event
+                   get the &lt;input[type=checkbox]/&gt; in the &lt;tbody/&gt; in the closest &lt;form/&gt;
+                   set its checked to false
+                   hide #bulk-actions">Cancel</button>
+        </div>
     </form>
     <p><a class="btn btn-light" href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count"
                                                                              hx-trigger="revealed">
