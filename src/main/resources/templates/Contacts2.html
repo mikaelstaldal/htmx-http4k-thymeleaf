@@ -1,19 +1,29 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2"*/-->
 <!DOCTYPE html>
 <html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
-<style data-th-fragment="extra">
-    tr.htmx-swapping {
-        opacity: 0;
-        transition: opacity 1s ease-out;
-    }
-</style>
+<div data-th-fragment="extra">
+    <style>
+        tr.htmx-swapping {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+    </style>
+    <script>
+      function sweetConfirm(elt, config) {
+        Swal.fire(config).then((result) => {
+          if (result.isConfirmed) elt.dispatchEvent(new Event('confirmed'));
+        });
+      }
+    </script>
+</div>
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
     <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
 
     <div class="mb-2">
-        <button id="sync-events-btn" class="btn btn-secondary" hx-post="/contacts2/sync-events" hx-target="next span" hx-swap="outerHTML">
+        <button id="sync-events-btn" class="btn btn-secondary" hx-post="/contacts2/sync-events" hx-target="next span"
+                hx-swap="outerHTML">
             Sync contacts from integration with events
         </button>
         <button class="btn btn-light" disabled
@@ -25,7 +35,8 @@
         <span></span>
     </div>
     <div class="mb-2">
-        <button id="sync-oob-btn" class="btn btn-secondary" hx-post="/contacts2/sync-oob" hx-target="next span" hx-swap="outerHTML">
+        <button id="sync-oob-btn" class="btn btn-secondary" hx-post="/contacts2/sync-oob" hx-target="next span"
+                hx-swap="outerHTML">
             Sync contacts from integration with out-of-band swap
         </button>
         <button class="btn btn-light" disabled
@@ -79,18 +90,18 @@
                 hx-delete="/contacts2"
                 hx-target="body"
                 hx-trigger="confirmed"
-                onclick="Swal.fire({
+                _="on click(target)
+                     halt the event
+                     call sweetConfirm(target, {
                         title: 'Delete these contacts?',
                         showCancelButton: true,
-                        confirmButtonText: 'Delete',
-                    }).then((result) => {
-                        if (result.isConfirmed) event.target.dispatchEvent(new Event('confirmed'));
-                    });
-                    return false;"
-                >Delete selected contacts
+                        confirmButtonText: 'Delete'
+                     })"
+        >Delete selected contacts
         </button>
     </form>
-    <p><a class="btn btn-light" href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count" hx-trigger="revealed">
+    <p><a class="btn btn-light" href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count"
+                                                                             hx-trigger="revealed">
         <img class="htmx-indicator"
              width="58" height="58"
              alt="Request In Flight..."
