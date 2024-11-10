@@ -58,7 +58,7 @@
         <input class="btn btn-primary" type="submit" value="Search"/>
     </form>
 
-    <form class="mb-2">
+    <form id="contacts-form" class="mb-2">
         <table class="table">
             <thead>
             <tr>
@@ -77,8 +77,17 @@
         </table>
         <button class="btn btn-danger"
                 hx-delete="/contacts2"
-                hx-confirm="Are you sure you want to delete there contacts?"
-                hx-target="body">Delete selected contacts
+                hx-target="body"
+                hx-trigger="confirmed"
+                onclick="Swal.fire({
+                        title: 'Delete these contacts?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete',
+                    }).then((result) => {
+                        if (result.isConfirmed) event.target.dispatchEvent(new Event('confirmed'));
+                    });
+                    return false;"
+                >Delete selected contacts
         </button>
     </form>
     <p><a class="btn btn-light" href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count" hx-trigger="revealed">
