@@ -433,6 +433,7 @@ fun main() {
         static(Classpath("static")),
         htmxWebjars(),
         webjar("bootstrap", "5.3.3"),
+        webjar("missing.css", "1.1.3"),
         webjar("sweetalert2", "11.12.3"),
     )
 

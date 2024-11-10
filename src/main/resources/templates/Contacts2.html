@@ -1,6 +1,6 @@
 <!--/*@thymesVar id="model" type="nu.staldal.htmxhttp4kthymeleaf.Contacts2"*/-->
 <!DOCTYPE html>
-<html lang="en" data-th-replace="~{layout.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
+<html lang="en" data-th-replace="~{layout2.html :: layout(~{::title/content()}, ~{::extra}, ~{::content})}">
 <div data-th-fragment="extra">
     <style>
         tr.htmx-swapping {
@@ -19,7 +19,7 @@
 <body>
 <h2 data-th-fragment="title">htmx powered Contact.app</h2>
 <div data-th-fragment="content">
-    <div class="flash" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
+    <div class="alert alert-primary" role="alert" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
 
     <div class="mb-2">
         <button id="sync-events-btn" class="btn btn-secondary" hx-post="/contacts2/sync-events" hx-target="next span"
@@ -70,22 +70,6 @@
     </form>
 
     <form id="contacts-form" class="mb-2">
-        <table class="table">
-            <thead>
-            <tr>
-                <th></th>
-                <th>First</th>
-                <th>Last</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody id="contacts-tbody"
-                   hx-get="/contacts2"
-                   hx-trigger="contacts-updated from:body"
-                   data-th-insert="~{Contacts2Rows}"></tbody>
-        </table>
         <div id="bulk-actions" style="display: none">
             <slot></slot> contacts selected
             <button class="btn btn-danger"
@@ -109,6 +93,22 @@
                    set its checked to false
                    hide #bulk-actions">Cancel</button>
         </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>First</th>
+                <th>Last</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="contacts-tbody"
+                   hx-get="/contacts2"
+                   hx-trigger="contacts-updated from:body"
+                   data-th-insert="~{Contacts2Rows}"></tbody>
+        </table>
     </form>
     <p><a class="btn btn-light" href="/contacts2/new">Add Contact</a> (<span hx-get="/contacts2/count"
                                                                              hx-trigger="revealed">
