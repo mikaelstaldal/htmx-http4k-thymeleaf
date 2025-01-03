@@ -1,0 +1,1 @@
+rootProject.name = "htmx-http4k-thymeleaf"
