@@ -6,7 +6,11 @@ import dev.forkhandles.result4k.mapFailure
 import org.http4k.core.Body
 import org.http4k.core.ContentType
 import org.http4k.core.ContentType.Companion.TEXT_HTML
-import org.http4k.core.Method.*
+import org.http4k.core.HttpHandler
+import org.http4k.core.Method.DELETE
+import org.http4k.core.Method.GET
+import org.http4k.core.Method.POST
+import org.http4k.core.Method.PUT
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -52,10 +56,16 @@ fun Request.Companion.htmxTrigger(id: Id) = { request: Request -> Header.HX_TRIG
 private const val PAGE_SIZE = 10
 
 fun main() {
-    val dataStore = DataStore()
-    val contactsStore = ContactsStore()
+    val app = createApp(DataStore(), ContactsStore())
+    app.asServer(SunHttp(port)).start()
+    println("Listening on $port")
+}
 
-    val app = routes(
+fun createApp(dataStore: DataStore, contactsStore: ContactsStore): HttpHandler = ServerFilters.CatchAll { t ->
+    t.printStackTrace()
+    Response(Status.INTERNAL_SERVER_ERROR)
+}.then(
+    routes(
         "/" bind GET to {
             Response(OK).with(htmlLens of index)
         },
@@ -436,13 +446,7 @@ fun main() {
         webjar("missing.css", "1.1.3"),
         webjar("sweetalert2", "11.12.3"),
     )
-
-    ServerFilters.CatchAll { t ->
-        t.printStackTrace()
-        Response(Status.INTERNAL_SERVER_ERROR)
-    }.then(app).asServer(SunHttp(port)).start()
-    println("Listening on $port")
-}
+)
 
 private fun activateOrDeactivateContact(request: Request, activate: Boolean, dataStore: DataStore): Response {
     val ids = idsLens(request)
