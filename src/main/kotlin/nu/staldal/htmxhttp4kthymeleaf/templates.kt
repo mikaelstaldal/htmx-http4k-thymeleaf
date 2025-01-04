@@ -3,7 +3,7 @@ package nu.staldal.htmxhttp4kthymeleaf
 import org.http4k.template.ViewModel
 
 interface HtmlViewModel : ViewModel {
-    override fun template() = javaClass.simpleName + ".html"
+    override fun template(): String = javaClass.simpleName
 }
 
 @Suppress("ClassName")
@@ -51,7 +51,9 @@ data class Contacts2New(val contact: Contact, val errors: Contact) : HtmlViewMod
 data class Contacts2View(val contact: StoredContact) : HtmlViewModel
 data class Contacts2Edit(val contact: StoredContact, val errors: Contact) : HtmlViewModel
 
-data class Contacts2ArchiveUI(val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double) : HtmlViewModel
+data class Contacts2ArchiveUI(val archiveStatus: ContactsArchiver.Status, val archiveProgress: Double) : ViewModel {
+    override fun template() = "Contacts2::archive-ui"
+}
 
 data object Contacts2SyncEvent : HtmlViewModel
 data class Contacts2SyncOob(

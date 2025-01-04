@@ -40,7 +40,22 @@
         <span></span>
     </div>
 
-    <div data-th-insert="~{Contacts2ArchiveUI}"></div>
+    <div data-th-fragment="archive-ui" data-th-switch="${model.archiveStatus.name()}" id="archive-ui" hx-target="this" hx-swap="outerHTML">
+        <button class="btn btn-primary" data-th-case="WAITING" hx-post="/contacts2/archive">
+            Download Contact Archive
+        </button>
+        <div data-th-case="RUNNING" hx-get="/contacts2/archive" hx-trigger="load delay:500ms">
+            <progress class="progress"
+                      max="100"
+                      data-th-value="${model.archiveProgress * 100}"
+                      data-th-text="'width:' + ${model.archiveProgress * 100} + '%'"></progress>
+        </div>
+        <div data-th-case="COMPLETE">
+            <a href="/contacts2/archive/file" _="on load click() me">Archive Downloading! Click
+                here if the download does not start.</a>
+            <button class="btn btn-light" hx-delete="/contacts2/archive">Clear Download</button>
+        </div>
+    </div>
 
     <form action="/contacts2" method="get">
         <label for="search">Search Contacts </label>

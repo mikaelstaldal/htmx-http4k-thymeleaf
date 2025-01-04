@@ -3,6 +3,7 @@ package nu.staldal.htmxhttp4kthymeleaf
 import dev.forkhandles.result4k.get
 import dev.forkhandles.result4k.map
 import dev.forkhandles.result4k.mapFailure
+import nu.staldal.http4k.ThymeleafTemplates
 import org.http4k.core.Body
 import org.http4k.core.ContentType
 import org.http4k.core.ContentType.Companion.TEXT_HTML
@@ -41,7 +42,6 @@ import org.http4k.routing.routes
 import org.http4k.routing.static
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
-import org.http4k.template.ThymeleafTemplates
 import org.http4k.template.viewModel
 import kotlin.random.Random
 
