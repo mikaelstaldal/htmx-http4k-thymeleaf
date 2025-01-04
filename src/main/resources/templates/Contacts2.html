@@ -14,8 +14,7 @@
     <div class="alert alert-primary" role="alert" data-th-if="${model.flash}" data-th-text="${model.flash}"/>
 
     <div class="mb-2">
-        <button id="sync-events-btn" class="btn btn-secondary" hx-post="/contacts2/sync-events" hx-target="next span"
-                hx-swap="outerHTML">
+        <button id="sync-events-btn" class="btn btn-secondary" hx-post="/contacts2/sync-events" hx-target="next span">
             Sync contacts from integration with events
         </button>
         <button class="btn btn-light" disabled

@@ -335,9 +335,9 @@ fun createApp(dataStore: DataStore, contactsStore: ContactsStore): HttpHandler =
                         email = "a${System.currentTimeMillis()}@sync.com",
                     )
                 )
-                Response(OK).header("HX-Trigger", "contacts-updated").with(htmlLens of Contacts2SyncEvent)
+                Response(OK).header("HX-Trigger", "contacts-updated").body("Contacts updated with event")
             } else {
-                Response(OK).with(htmlLens of Contacts2SyncNotUpdated)
+                Response(OK).body("Contacts up-to-date")
             }
         },
         "/contacts2/sync-oob" bind POST to { request ->

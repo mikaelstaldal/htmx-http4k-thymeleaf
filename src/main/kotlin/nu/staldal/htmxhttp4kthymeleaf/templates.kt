@@ -55,7 +55,6 @@ data class Contacts2ArchiveUI(val archiveStatus: ContactsArchiver.Status, val ar
     override fun template() = "Contacts2::archive-ui"
 }
 
-data object Contacts2SyncEvent : HtmlViewModel
 data class Contacts2SyncOob(
     val contacts: Collection<StoredContact>, val q: String?, val page: Int, val pageSize: Int,
 ) : HtmlViewModel
