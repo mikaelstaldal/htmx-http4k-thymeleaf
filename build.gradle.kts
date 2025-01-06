@@ -29,16 +29,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.0")
 
     // http4k
-    implementation(platform("org.http4k:http4k-bom:5.44.0.0"))
+    implementation(platform("org.http4k:http4k-bom:5.44.2.0"))
     implementation(platform("dev.forkhandles:forkhandles-bom:2.20.0.0"))
     implementation("org.http4k:http4k-core")
     implementation("org.http4k:http4k-htmx")
     implementation("dev.forkhandles:result4k")
 
     // Thymeleaf templates
-    // implementation("org.http4k:http4k-template-thymeleaf")
-    implementation("org.http4k:http4k-template-core")
-    implementation("org.thymeleaf:thymeleaf:3.1.3.RELEASE")
+    implementation("org.http4k:http4k-template-thymeleaf")
 
     // WebJars (Frontend Dependencies)
     implementation("org.webjars.npm:bootstrap:5.3.3")
